@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
+
+    <RelativeLayout
+        android:id="@+id/consentToggleRelativeLayout"
+        android:background="@color/ConsentDialogToggleBackground"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/consentDialogLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageButton
+                android:id="@+id/consentToggleImageButton"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_easymobile_expand" />
+
+            <Button
+                android:id="@+id/consentToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:textAllCaps="false"
+                android:textColor="@color/ConsentDialogToggleTitleColor"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/consentToggleSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/consentToggleDescriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@android:color/primary_text_light"
+        style="@style/TextAppearance.AppCompat.Small"/>
+
+</LinearLayout>
