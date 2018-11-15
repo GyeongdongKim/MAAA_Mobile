@@ -7,6 +7,9 @@ using UnityStandardAssets.Characters.FirstPerson;
 using PlayFab;
 using PlayFab.ClientModels;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using EasyMobile;
 
 public class LobbyManager : Photon.PunBehaviour {
 
@@ -26,23 +29,23 @@ public class LobbyManager : Photon.PunBehaviour {
     private string _playFabPlayerIdCache;
 
     TypedLobby randomLobbyType = new TypedLobby("Random", LobbyType.Default);
-
+    
     private void Awake()
     {
         //게임 버전 확인 후 네트워크 연결
         if (!PhotonNetwork.connected)
         {
+            GameServices.Init();
             PhotonNetwork.ConnectUsingSettings(GameVersion);
-            userId = "TestPlayer_" + Random.Range(0, 999);
-            playerNameText.text = userId;
-            PhotonNetwork.player.NickName = userId;
+            StartCoroutine(NameSet());
         }
-        PhotonNetwork.JoinLobby(randomLobbyType);
-        /*//Note: Setting title Id here can be skipped if you have set the value in Editor Extensions already.
         if (string.IsNullOrEmpty(PlayFabSettings.TitleId))
         {
             PlayFabSettings.TitleId = "5A9C"; // Please change this value to your own titleId from PlayFab Game Manager
         }
+        PhotonNetwork.JoinLobby(randomLobbyType);
+        /*//Note: Setting title Id here can be skipped if you have set the value in Editor Extensions already.
+        
 
         var request = new LoginWithSteamRequest { CreateAccount = true, SteamTicket = SteamAuthSessionTicket, TitleId = "5A9C"};
 
@@ -121,6 +124,39 @@ public class LobbyManager : Photon.PunBehaviour {
         Debug.Log("PlayFab + Photon Example: " + message);
     }
     #endregion
+    IEnumerator NameSet()
+    {
+        while (!GameServices.IsInitialized())
+            yield return null;
+
+        GameServices.LocalUser.Authenticate((bool success) => {
+            if (success)
+            {
+                Debug.Log("Google Signed In");
+                var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+                Debug.Log("Server Auth Code: " + serverAuthCode);
+
+                PlayFabClientAPI.LoginWithGoogleAccount(new LoginWithGoogleAccountRequest()
+                {
+                    TitleId = PlayFabSettings.TitleId,
+                    ServerAuthCode = serverAuthCode,
+                    CreateAccount = true
+                }, (result) =>
+                {
+                    Debug.Log("Signed In as " + result.PlayFabId);
+
+                }, OnPlayFabError);
+            }
+            else
+            {
+                Debug.Log("Google Failed to Authroize your login");
+            }
+        });
+        userId = GameServices.LocalUser.userName;
+        playerNameText.text = userId;
+        PhotonNetwork.player.NickName = userId;
+        StopCoroutine(NameSet());
+    }
     void Start() {
     }
 

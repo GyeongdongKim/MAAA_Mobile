@@ -181,7 +181,15 @@ MonoBehaviour:
     mGpgsPopupGravity: 0
     mLeaderboards: []
     mAchievements: []
-    mAndroidXmlResources: 
+    mAndroidXmlResources: '<?xml version="1.0" encoding="tuf-8"?>
+
+      <resources>
+
+      <string name="app_id">769769039442</string>
+
+      <string name="package_name">com.gdgames.maaa</string>
+
+      </resources>'
     mEnableSavedGames: 0
     mAutoConflictResolutionStrategy: 0
     mGpgsDataSource: 0
