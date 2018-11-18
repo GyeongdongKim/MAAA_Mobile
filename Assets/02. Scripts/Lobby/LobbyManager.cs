@@ -129,7 +129,7 @@ public class LobbyManager : Photon.PunBehaviour {
         while (!GameServices.IsInitialized())
             yield return null;
 
-        GameServices.LocalUser.Authenticate((bool success) => {
+        /*GameServices.LocalUser.Authenticate((bool success) => {
             if (success)
             {
                 Debug.Log("Google Signed In");
@@ -151,8 +151,10 @@ public class LobbyManager : Photon.PunBehaviour {
             {
                 Debug.Log("Google Failed to Authroize your login");
             }
-        });
+        });*/
+        
         userId = GameServices.LocalUser.userName;
+        Debug.Log(userId);
         playerNameText.text = userId;
         PhotonNetwork.player.NickName = userId;
         StopCoroutine(NameSet());

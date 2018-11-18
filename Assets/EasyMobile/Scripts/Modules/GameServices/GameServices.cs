@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SocialPlatforms;
 using EasyMobile.Internal;
-
+using PlayFab;
+using PlayFab.ClientModels;
 #if UNITY_IOS
 using UnityEngine.SocialPlatforms.GameCenter;
 #endif
@@ -143,22 +144,26 @@ namespace EasyMobile
         {
             // Authenticate and register a ProcessAuthentication callback
             // This call needs to be made before we can proceed to other calls in the Social API
-            #if UNITY_IOS
+#if UNITY_IOS
             GameCenterPlatform.ShowDefaultAchievementCompletionBanner(true);
             Social.localUser.Authenticate(ProcessAuthentication);
 
-            #elif UNITY_ANDROID && EM_GPGS
-            #if EASY_MOBILE_PRO
+#elif UNITY_ANDROID && EM_GPGS
+#if EASY_MOBILE_PRO
             PlayGamesClientConfiguration.Builder gpgsConfigBuilder = new PlayGamesClientConfiguration.Builder();
 
             if (EM_Settings.GameServices.IsSavedGamesEnabled)
             {
                 gpgsConfigBuilder.EnableSavedGames();
             }
-               
+
+            gpgsConfigBuilder.RequestServerAuthCode(false);
+            gpgsConfigBuilder.AddOauthScope("profile");
+
             // Build the config
             PlayGamesClientConfiguration gpgsConfig = gpgsConfigBuilder.Build();
 
+            
             // Initialize PlayGamesPlatform
             PlayGamesPlatform.InitializeInstance(gpgsConfig);
             #endif
@@ -735,6 +740,21 @@ namespace EasyMobile
         {
             if (success)
             {
+                Debug.Log("Google Signed In");
+                var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+                Debug.Log("Server Auth Code: " + serverAuthCode);
+
+                PlayFabClientAPI.LoginWithGoogleAccount(new LoginWithGoogleAccountRequest()
+                    {
+                        TitleId = PlayFabSettings.TitleId,
+                        ServerAuthCode = serverAuthCode,
+                        CreateAccount = true
+                    }, (result) =>
+                    {
+                        Debug.Log("Signed In as " + result.PlayFabId);
+
+                    }, (error)=> { Debug.Log("Error sibal !"); });
+                
                 if (UserLoginSucceeded != null)
                     UserLoginSucceeded();
 

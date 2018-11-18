@@ -27,7 +27,7 @@ public class UserProfileManager : MonoBehaviour
     Vector3 pivot = new Vector2(0.5f, 0.5f);
 
     // Use this for initialization
-    void Start()
+    public void InitCoinAndName()
     {
         if (GetUserData("MafiaCoin") == null)
         {
