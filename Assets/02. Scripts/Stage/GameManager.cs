@@ -84,10 +84,7 @@ public class GameManager : Photon.PunBehaviour {
     void Start()
     {
         StartCoroutine(Logo());
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
+        
         //yield return new WaitForSeconds(1.0f);
         //string msg = "\n<color=#00ff00>[" + PhotonNetwork.player.NickName + "] Connected</color>";
         //pv.RPC("LogMsg", PhotonTargets.AllBuffered, msg);
