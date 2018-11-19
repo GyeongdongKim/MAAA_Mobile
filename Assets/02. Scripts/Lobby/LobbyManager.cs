@@ -118,7 +118,7 @@ public class LobbyManager : Photon.PunBehaviour {
         userId = GameServices.LocalUser.userName;
         Debug.Log(userId);
         playerNameText.text = userId;
-        PhotonNetwork.player.NickName = userId;
+        PhotonNetwork.player.NickName = "M_"+userId;
         StartCoroutine(ProfileLoad());
         StopCoroutine(NameSet());
     }

@@ -39,9 +39,9 @@ public class UserProfileManager : MonoBehaviour
         textMafiaCoin.text = mafiaCoin;
 
         PlayFabClientAPI.UpdateUserTitleDisplayName(
-            new UpdateUserTitleDisplayNameRequest { DisplayName = displayName.text },
+            new UpdateUserTitleDisplayNameRequest { DisplayName = "M_"+displayName.text },
             result => {
-                Debug.Log("Got user data:");
+                Debug.Log("Success to set Name");
             }, (error) => {
                 Debug.Log("Got error retrieving user data:");
                 Debug.Log(error.GenerateErrorReport());
