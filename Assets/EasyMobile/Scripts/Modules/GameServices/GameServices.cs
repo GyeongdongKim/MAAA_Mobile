@@ -752,6 +752,22 @@ namespace EasyMobile
                     }, (result) =>
                     {
                         Debug.Log("Signed In as " + result.PlayFabId);
+                        PlayFabClientAPI.GetPhotonAuthenticationToken(new GetPhotonAuthenticationTokenRequest()
+                        {
+                            PhotonApplicationId = PhotonNetwork.PhotonServerSettings.AppID
+                        }, (result_in) =>
+                        {
+                            var customAuth = new AuthenticationValues { AuthType = CustomAuthenticationType.Custom };
+                            //We add "username" parameter. Do not let it confuse you: PlayFab is expecting this parameter to contain player PlayFab ID (!) and not username.
+                            customAuth.AddAuthParameter("username", result.PlayFabId);    // expected by PlayFab custom auth service
+                            //We add "token" parameter. PlayFab expects it to contain Photon Authentication Token issues to your during previous step.
+                            customAuth.AddAuthParameter("token", result_in.PhotonCustomAuthenticationToken);
+                            //We finally tell Photon to use this authentication parameters throughout the entire application.
+                            PhotonNetwork.AuthValues = customAuth;
+                            PhotonNetwork.ConnectUsingSettings("1.0");
+
+                        }, (error) => { Debug.Log("Error sibal !"); });
+
 
                     }, (error)=> { Debug.Log("Error sibal !"); });
                 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TitleId: 5A9C
   VerticalName: 
-  DeveloperSecretKey: X6ATKKGCYZMU9RBQY7OEY75NKQ3439EWWWGP8YE6J8TJKD6I3R
+  DeveloperSecretKey: 648CR3IIQOSII31JIHGTN1MSQUQ8RISYZFBYFD33RPZGF7WIQ9
   ProductionEnvironmentUrl: .playfabapi.com
   RequestType: 2
   RequestTimeout: 2000
