@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.Cameras;
 using UnityStandardAssets.Characters.ThirdPerson;
-//using UITween;
+using UnityStandardAssets.CrossPlatformInput;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameManager : Photon.PunBehaviour {
@@ -64,6 +64,7 @@ public class GameManager : Photon.PunBehaviour {
     public GameObject miniMap;
     public GameObject killUI;
     [HideInInspector] public bool isKillUIOn;
+    public GameObject mafiaMic;
     #endregion
 
     void Awake()
@@ -319,6 +320,9 @@ public class GameManager : Photon.PunBehaviour {
             playerList[i].SetCustomProperties(playerCustomProps);
         }
         GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
+        if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
+            mafiaMic.SetActive(false);
+
     }
 
     IEnumerator Logo()
@@ -387,7 +391,7 @@ public class GameManager : Photon.PunBehaviour {
     {
         RaycastHit hit;
         GameObject target = null;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f,Screen.height/2f));
 
         if (Physics.Raycast(ray.origin, ray.direction, out hit, length))
             target = hit.collider.gameObject;
@@ -398,6 +402,11 @@ public class GameManager : Photon.PunBehaviour {
     {
         getCoin = score;
         coinScoreText.text = score.ToString();
+    }
+
+    public void ClickKillButton()
+    {
+        CrossPlatformInputManager.SetButtonDown("Kill");
     }
     #region PhotonNetworkCallbackFunction
     

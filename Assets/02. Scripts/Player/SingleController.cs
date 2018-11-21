@@ -17,7 +17,7 @@ public class SingleController : MonoBehaviour {
     }
 
     void Update () {
-        if (Input.GetKeyDown(KeyCode.F) && gameManager.isKillUIOn)
+        if (CrossPlatformInputManager.GetButtonDown("Kill") && gameManager.isKillUIOn)
         {
             jobManager.AttackCoroutine(gameManager.GetObjectWithPoint(15.0f));
         }

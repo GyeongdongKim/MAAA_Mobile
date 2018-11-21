@@ -173,6 +173,9 @@ GameObject:
   - component: {fileID: 114548116008863158}
   - component: {fileID: 114120553260313084}
   - component: {fileID: 114010094556603926}
+  - component: {fileID: 82306377893483454}
+  - component: {fileID: 114650231073576192}
+  - component: {fileID: 114109000507064358}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1165,25 +1168,6 @@ GameObject:
   - component: {fileID: 4114569415988842}
   m_Layer: 0
   m_Name: EthanLeftHandMiddle4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1750392804219606
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4807624623858460}
-  - component: {fileID: 82284962453170794}
-  - component: {fileID: 114648929443092464}
-  - component: {fileID: 114192636639130400}
-  - component: {fileID: 114970853785177922}
-  m_Layer: 0
-  m_Name: PVoice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2207,7 +2191,6 @@ Transform:
   - {fileID: 4961300276222278}
   - {fileID: 4997669476353408}
   - {fileID: 4469299467856426}
-  - {fileID: 4807624623858460}
   - {fileID: 4694554314585216}
   - {fileID: 224593710078312068}
   m_Father: {fileID: 0}
@@ -2237,7 +2220,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4659389986646534}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4694814362733276
 Transform:
@@ -2403,19 +2386,6 @@ Transform:
   - {fileID: 4134380984560106}
   m_Father: {fileID: 4385450263745306}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4807624623858460
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1750392804219606}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4659389986646534}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4807700629481864
 Transform:
@@ -2795,12 +2765,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!82 &82284962453170794
+--- !u!82 &82306377893483454
 AudioSource:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1750392804219606}
+  m_GameObject: {fileID: 1144418071674290}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
@@ -3010,6 +2980,17 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 0.3
+--- !u!114 &114109000507064358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1144418071674290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc001952a941c2743a3739a35bf9c162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114120553260313084
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3021,22 +3002,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bdac72a773609040950883426af2c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114192636639130400
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1750392804219606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b23b644f2525c1c4a9fd5b77d9505148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Source: 0
-  MicrophoneType: 0
-  TypeConvert: 0
-  AudioClip: {fileID: 0}
-  LoopAudioClip: 1
 --- !u!114 &114283034523868946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3278,17 +3243,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mTarget: {fileID: 0}
---- !u!114 &114648929443092464
+--- !u!114 &114650231073576192
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1750392804219606}
+  m_GameObject: {fileID: 1144418071674290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc001952a941c2743a3739a35bf9c162, type: 3}
+  m_Script: {fileID: 11500000, guid: b23b644f2525c1c4a9fd5b77d9505148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Source: 0
+  MicrophoneType: 0
+  TypeConvert: 0
+  AudioClip: {fileID: 0}
+  LoopAudioClip: 1
 --- !u!114 &114690185800212902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3515,32 +3485,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &114970853785177922
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1750392804219606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  OwnerShipWasTransfered: 0
-  prefixBackup: -1
-  synchronization: 0
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 0}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
-  currentMasterID: -1
-  isRuntimeInstantiated: 0
 --- !u!136 &136220274218781044
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -3834,7 +3778,7 @@ RectTransform:
   - {fileID: 224322288688102672}
   - {fileID: 224744829648170624}
   m_Father: {fileID: 4659389986646534}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

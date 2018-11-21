@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 4394789798987706}
   m_Layer: 0
   m_Name: mixamorig:HeadTop_End
-  m_TagString: Untagged
+  m_TagString: HEAD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -614,7 +614,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1677890498440014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.46881315, y: 8.046665e-17, z: -3.6238956}
+  m_LocalPosition: {x: -2.5975807, y: -2.1819196e-17, z: 0.9826492}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4950974095974370}

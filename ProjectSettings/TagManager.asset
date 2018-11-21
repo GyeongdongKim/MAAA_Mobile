@@ -24,6 +24,7 @@ TagManager:
   - VOTEPAPER
   - STEAMMANAGER
   - JOYSTICK
+  - HEAD
   layers:
   - Default
   - TransparentFX
