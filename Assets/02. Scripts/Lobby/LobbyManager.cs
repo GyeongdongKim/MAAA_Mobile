@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityStandardAssets.Characters.FirstPerson;
 using PlayFab;
 using PlayFab.ClientModels;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
 using EasyMobile;
 
 public class LobbyManager : Photon.PunBehaviour {
@@ -19,13 +17,18 @@ public class LobbyManager : Photon.PunBehaviour {
     private GameObject target;
     public GameObject moniter;
     public GameObject crossHair;
-    public GameObject customLobby;
-    public GameObject randomLobby;
-    public GameObject customRoomList;
     public GameObject exitUI;
     public GameObject panelBlack, panelSplash;
     public RectTransform playerContents;
-    public RigidbodyFirstPersonController controller;
+    public Text debugText;
+    public GameObject errorPopup;
+    [Header("MoniterIconUI")]
+    public RandomLobbyManager randomLobbyManager;
+    public CustomLobbyManager customLobbyManager;
+    public GameObject customLobby;
+    public GameObject randomLobby;
+    public GameObject customRoomList;
+
     private string _playFabPlayerIdCache;
     private UserProfileManager userProfileManager;
     TypedLobby randomLobbyType = new TypedLobby("Random", LobbyType.Default);
@@ -129,7 +132,14 @@ public class LobbyManager : Photon.PunBehaviour {
 
     public void OnClickJoinRandomRoom()
     {
-        PhotonNetwork.JoinRandomRoom();
+        if (PhotonNetwork.connected)
+        {
+            PhotonNetwork.JoinRandomRoom();
+            randomLobby.SetActive(true);
+            randomLobbyManager.ClickButtonAndRefreshList();
+        }
+        else
+            ErrorPopup("PhotonNetworkIsNotConnected",true);
     }
 
     private void OnLoginSuccess(LoginResult result)
@@ -142,6 +152,29 @@ public class LobbyManager : Photon.PunBehaviour {
         Debug.LogWarning("Something went wrong with your first API call.  :(");
         Debug.LogError("Here's some debug information:");
         Debug.LogError(error.GenerateErrorReport());
+        ErrorPopup("PlayfabLoginError", true);
+        ErrorPopup(error.GenerateErrorReport(), false);
+    }
+
+    public void ErrorPopup(string errorMessage,bool clean)
+    {
+        errorPopup.SetActive(true);
+        if (clean)
+            debugText.text = errorMessage;
+        else
+            debugText.text += errorMessage + "\n";
+    }
+    public override void OnFailedToConnectToPhoton(DisconnectCause cause)
+    {
+        base.OnFailedToConnectToPhoton(cause);
+        ErrorPopup("FailedToConnectToPhoton",true);
+        ErrorPopup(cause.ToString(),false);
+    }
+    public override void OnCustomAuthenticationFailed(string debugMessage)
+    {
+        base.OnCustomAuthenticationFailed(debugMessage);
+        ErrorPopup("PhotonAuthenticaionFailed",true);
+        ErrorPopup(debugMessage,false);
     }
     #endregion
 }

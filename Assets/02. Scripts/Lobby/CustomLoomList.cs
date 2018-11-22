@@ -10,6 +10,7 @@ public class CustomLoomList : Photon.PunBehaviour {
     public GameObject roomItem;
     public GameObject customLobby;
     public GameObject customRoomList;
+    public LobbyManager lobbyManager;
 
     TypedLobby customLobbyType = new TypedLobby("Custom", LobbyType.Default);
     TypedLobby randomLobbyType = new TypedLobby("Random", LobbyType.Default);
@@ -56,7 +57,16 @@ public class CustomLoomList : Photon.PunBehaviour {
 
     public void JoinCustomLobby()
     {
-        PhotonNetwork.JoinLobby(customLobbyType);
+        if (PhotonNetwork.connected)
+        {
+            PhotonNetwork.JoinLobby(customLobbyType);
+            customRoomList.SetActive(true);
+            OnReceivedRoomListUpdate();
+        }else
+        {
+            lobbyManager.ErrorPopup("PhotonIsNotConnected", true);
+        }
+        
     }
 
     public void LeaveCustomLobby()
