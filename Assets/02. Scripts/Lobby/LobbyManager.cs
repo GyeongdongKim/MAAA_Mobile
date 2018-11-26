@@ -15,13 +15,12 @@ public class LobbyManager : Photon.PunBehaviour {
     public Text playerNameText;
    
     private GameObject target;
-    public GameObject moniter;
-    public GameObject crossHair;
     public GameObject exitUI;
     public GameObject panelBlack, panelSplash;
-    public RectTransform playerContents;
-    public Text debugText;
     public GameObject errorPopup;
+    public Text errorText;
+    public GameObject successPopup;
+    public Text successText;
     [Header("MoniterIconUI")]
     public RandomLobbyManager randomLobbyManager;
     public CustomLobbyManager customLobbyManager;
@@ -35,7 +34,6 @@ public class LobbyManager : Photon.PunBehaviour {
     
     private void Awake()
     {
-        //게임 버전 확인 후 네트워크 연결
         if (!PhotonNetwork.connected)
         {
             GameServices.Init();
@@ -160,10 +158,20 @@ public class LobbyManager : Photon.PunBehaviour {
     {
         errorPopup.SetActive(true);
         if (clean)
-            debugText.text = errorMessage;
+            errorText.text = errorMessage;
         else
-            debugText.text += errorMessage + "\n";
+            errorText.text += errorMessage + "\n";
     }
+
+    public void SuccessPopup(string message, bool clean)
+    {
+        successPopup.SetActive(true);
+        if (clean)
+            successText.text = message;
+        else
+            successText.text += message + "\n";
+    }
+
     public override void OnFailedToConnectToPhoton(DisconnectCause cause)
     {
         base.OnFailedToConnectToPhoton(cause);

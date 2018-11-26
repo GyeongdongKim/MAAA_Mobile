@@ -78,7 +78,7 @@ public class FriendsManager : MonoBehaviour {
         }
         // Execute request and update friends when we are done
         PlayFabClientAPI.AddFriend(request, result => {
-            Debug.Log("Friend added successfully!");
+            lobbyManager.SuccessPopup("Add Friend : " + friendId, true);
             FriendListRefresh();
             friendId.text = "";
         }, error => { lobbyManager.ErrorPopup("Can't Find Friend : " + friendId, true); });

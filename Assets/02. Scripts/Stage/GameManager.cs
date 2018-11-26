@@ -56,6 +56,8 @@ public class GameManager : Photon.PunBehaviour {
 
     #region UI Variables
     [Header("UI Variables")]
+    public Canvas canvas;
+    public Canvas joystickCanvas;
     public Text narrText;
     public Text txtLogMsg;
     [SerializeField] private Image imageJob;
@@ -69,7 +71,7 @@ public class GameManager : Photon.PunBehaviour {
 
     void Awake()
     {
-        PhotonNetwork.isMessageQueueRunning = true;
+        Screen.orientation = ScreenOrientation.Landscape;
         //pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
         
@@ -250,7 +252,8 @@ public class GameManager : Photon.PunBehaviour {
         localCam = PhotonNetwork.Instantiate(playerCamera.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         freeLookCam = localCam.GetComponentInChildren<FreeLookCam>();
         thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
-
+        canvas.worldCamera = localCam.GetComponentInChildren<Camera>();
+        joystickCanvas.worldCamera = localCam.GetComponentInChildren<Camera>();
         yield return null;
     }
 

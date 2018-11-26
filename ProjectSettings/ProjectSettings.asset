@@ -54,7 +54,7 @@ PlayerSettings:
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
-  androidShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: 2
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
   iosAllowHTTPDownload: 1
@@ -246,10 +246,10 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/KGD/Documents/MAAA_Mobile/user.keystore
+  AndroidKeystoreName: E:/UnityProject/MAAA/MAAA_Mobile/user.keystore
   AndroidKeyaliasName: gdkey
   AndroidBuildApkPerCpuArchitecture: 0
-  AndroidTVCompatibility: 1
+  AndroidTVCompatibility: 0
   AndroidIsGame: 1
   AndroidEnableTango: 0
   androidEnableBanner: 1
