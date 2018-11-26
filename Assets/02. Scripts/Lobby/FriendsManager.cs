@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
 
@@ -8,8 +9,6 @@ public class FriendsManager : MonoBehaviour {
     public List<PlayFab.ClientModels.FriendInfo> _friends = null;
     public GameObject playerContent;
     public RectTransform scrollContents;
-
-
     public LobbyManager lobbyManager;
 	// Use this for initialization
 	void Start () {
@@ -23,6 +22,10 @@ public class FriendsManager : MonoBehaviour {
 
     public void FriendListRefresh()
     {
+        foreach (GameObject item in GameObject.FindGameObjectsWithTag("PLAYERCARD"))
+        {
+            Destroy(item);
+        }
         for (int i = 0; i < _friends.Count; i++)
         {
             GameObject a = Instantiate(playerContent, scrollContents);
@@ -55,28 +58,30 @@ public class FriendsManager : MonoBehaviour {
 
     enum FriendIdType { PlayFabId, Username, Email, DisplayName };
 
-     void AddFriend(FriendIdType idType, string friendId)
+     void AddFriend(FriendIdType idType, Text friendId)
     {
         var request = new AddFriendRequest();
         switch (idType)
         {
             case FriendIdType.PlayFabId:
-                request.FriendPlayFabId = friendId;
+                request.FriendPlayFabId = friendId.text;
                 break;
             case FriendIdType.Username:
-                request.FriendUsername = friendId;
+                request.FriendUsername = friendId.text;
                 break;
             case FriendIdType.Email:
-                request.FriendEmail = friendId;
+                request.FriendEmail = friendId.text;
                 break;
             case FriendIdType.DisplayName:
-                request.FriendTitleDisplayName = friendId;
+                request.FriendTitleDisplayName = friendId.text;
                 break;
         }
         // Execute request and update friends when we are done
         PlayFabClientAPI.AddFriend(request, result => {
             Debug.Log("Friend added successfully!");
-        }, DisplayPlayFabError);
+            FriendListRefresh();
+            friendId.text = "";
+        }, error => { lobbyManager.ErrorPopup("Can't Find Friend : " + friendId, true); });
     }
 
     public void RemoveFriend(PlayFab.ClientModels.FriendInfo friendInfo)
@@ -88,8 +93,22 @@ public class FriendsManager : MonoBehaviour {
             _friends.Remove(friendInfo);
         }, DisplayPlayFabError);
     }
-    void DisplayFriends(List<PlayFab.ClientModels.FriendInfo> friendsCache) { friendsCache.ForEach(f => Debug.Log(f.FriendPlayFabId)); }
-    void DisplayPlayFabError(PlayFabError error) { Debug.Log(error.GenerateErrorReport()); }
-    void DisplayError(string error) { Debug.LogError(error); }
+    void DisplayFriends(List<PlayFab.ClientModels.FriendInfo> friendsCache)
+    {
+        friendsCache.ForEach(f => Debug.Log(f.FriendPlayFabId));
+    }
 
+    void DisplayPlayFabError(PlayFabError error)
+    {
+        Debug.Log(error.GenerateErrorReport());
+    }
+    void DisplayError(string error)
+    {
+        Debug.LogError(error);
+    }
+
+    public void OnClickFIndButton(Text findName)
+    {
+        AddFriend(FriendIdType.DisplayName, findName);
+    }
 }

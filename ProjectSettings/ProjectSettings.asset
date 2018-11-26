@@ -246,7 +246,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: E:/UnityProject/MAAA/MAAA_Mobile/user.keystore
+  AndroidKeystoreName: C:/Users/KGD/Documents/MAAA_Mobile/user.keystore
   AndroidKeyaliasName: gdkey
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1

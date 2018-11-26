@@ -7,6 +7,7 @@ public class PlayerContent : MonoBehaviour {
 
     public Text playerName;
     private FriendsManager friendsManager;
+
     [HideInInspector] public PlayFab.ClientModels.FriendInfo friendInfo;
     
 	void Start () {
@@ -19,8 +20,9 @@ public class PlayerContent : MonoBehaviour {
 
     public void OnClickAddButton()
     {
-
+        
     }
+
     public void OnClickDeleteButton()
     {
         friendsManager.RemoveFriend(friendInfo);
