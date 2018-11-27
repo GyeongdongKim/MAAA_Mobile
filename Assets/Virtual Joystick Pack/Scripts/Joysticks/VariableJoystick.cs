@@ -9,12 +9,12 @@ public class VariableJoystick : Joystick
     //public Vector2 fixedScreenPosition;
     public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
     public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
+    public float sensitive = 1f;
     bool m_Dragging;
     int m_Id = -1;
 
     CrossPlatformInputManager.VirtualAxis m_HorizontalVirtualAxis; // Reference to the joystick in the cross platform input
     CrossPlatformInputManager.VirtualAxis m_VerticalVirtualAxis; // Reference to the joystick in the cross platform input
-    public FixedJoystick fixedJoystick;
 
     Vector2 joystickCenter = Vector2.zero;
 
@@ -69,14 +69,13 @@ public class VariableJoystick : Joystick
     public void UpdateVirtualAxes(Vector2 value)
     {
         if (joystickMode == JoystickMode.Horizontal)
-            m_HorizontalVirtualAxis.Update(value.x);
+            m_HorizontalVirtualAxis.Update(value.x*sensitive);
         if (joystickMode == JoystickMode.Vertical)
-            m_VerticalVirtualAxis.Update(value.y);
+            m_VerticalVirtualAxis.Update(value.y*sensitive);
         if (joystickMode == JoystickMode.AllAxis)
         {
-            m_HorizontalVirtualAxis.Update(value.x);
-            m_VerticalVirtualAxis.Update(value.y);
-            fixedJoystick.m_HorizontalVirtualAxis.Update(value.x);
+            m_HorizontalVirtualAxis.Update(value.x*sensitive);
+            m_VerticalVirtualAxis.Update(value.y*sensitive);
         }
     }
 

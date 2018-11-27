@@ -5,7 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class FixedJoystick : Joystick
 {
     Vector2 joystickPosition = Vector2.zero;
-    private Camera cam = new Camera();
+    //[HideInInspector] Camera cam;
 
     public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
     public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
@@ -18,13 +18,16 @@ public class FixedJoystick : Joystick
 
     void Start()
     {
-        joystickPosition = RectTransformUtility.WorldToScreenPoint(cam, background.position);
-
         m_HorizontalVirtualAxis = new CrossPlatformInputManager.VirtualAxis(horizontalAxisName);
         CrossPlatformInputManager.RegisterVirtualAxis(m_HorizontalVirtualAxis);
 
         m_VerticalVirtualAxis = new CrossPlatformInputManager.VirtualAxis(verticalAxisName);
         CrossPlatformInputManager.RegisterVirtualAxis(m_VerticalVirtualAxis);
+    }
+    public void SetJoystickPosition(Camera cam)
+    {
+        //joystickPosition = RectTransformUtility.WorldToScreenPoint(cam, background.position);
+        joystickPosition = cam.ViewportToScreenPoint(background.position);
     }
     private void Update()
     {
@@ -34,6 +37,7 @@ public class FixedJoystick : Joystick
         }
         if (Input.touchCount >= m_Id + 1 && m_Id != -1)
         {
+            Debug.Log("joystick: " + joystickPosition + "/ " +Input.touches[m_Id].position);
             Vector2 direction = Input.touches[m_Id].position - joystickPosition;
             inputVector = (direction.magnitude > background.sizeDelta.x / 2f) ? direction.normalized : direction / (background.sizeDelta.x / 2f);
             UpdateVirtualAxes(inputVector);

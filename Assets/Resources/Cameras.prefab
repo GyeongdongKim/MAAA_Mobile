@@ -2557,7 +2557,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 10caedb19710e1b4fb01d862af4fdc69, type: 2}
+  - {fileID: 2100000, guid: bff436e1682bb984789ccd98e4b8dfa3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2732,7 +2732,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: b6385e9b7f575eb4a9fbe57f3aa1c9ef, type: 2}
+  - {fileID: 2100000, guid: cf0841ddbaee0458ba962a0951441b8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7036,6 +7036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notDeadCam: {fileID: 1882837824447986}
   deadCam: {fileID: 1493048609379646}
+  cam: {fileID: 20236395313677846}
 --- !u!114 &114750341824193092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9602,7 +9603,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 20236395313677846}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -9611,7 +9612,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -3
   m_TargetDisplay: 0
 --- !u!223 &223896767042720356
 Canvas:
@@ -9622,7 +9623,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 20236395313677846}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -9631,7 +9632,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -3
   m_TargetDisplay: 0
 --- !u!224 &224021411553331352
 RectTransform:

@@ -11,7 +11,7 @@ public class RandomLobbyManager : Photon.PunBehaviour{
     public Text textCount;
     public int minimumPlayer;
     public int waitTime;
-
+    public GameObject black;
     [System.Serializable]
     public class PlayerItem
     {
@@ -120,6 +120,10 @@ public class RandomLobbyManager : Photon.PunBehaviour{
     [PunRPC]
     public void LoadBattleField()
     {
+        black.SetActive(true);
+        Screen.orientation = ScreenOrientation.Landscape;
+        Screen.autorotateToLandscapeLeft = true;
+        Screen.autorotateToLandscapeRight = true;
         PhotonNetwork.isMessageQueueRunning = false;
         SceneManager.LoadScene("Stage");
     }

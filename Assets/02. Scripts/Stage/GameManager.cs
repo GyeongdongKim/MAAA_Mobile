@@ -71,7 +71,6 @@ public class GameManager : Photon.PunBehaviour {
 
     void Awake()
     {
-        Screen.orientation = ScreenOrientation.Landscape;
         //pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
         
@@ -95,6 +94,7 @@ public class GameManager : Photon.PunBehaviour {
 
     void Update()
     {
+        
         /*if (!isDead || !gameOver)
         {
             while (Input.GetKey(KeyCode.LeftShift) && trigger)
@@ -252,8 +252,8 @@ public class GameManager : Photon.PunBehaviour {
         localCam = PhotonNetwork.Instantiate(playerCamera.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         freeLookCam = localCam.GetComponentInChildren<FreeLookCam>();
         thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
-        canvas.worldCamera = localCam.GetComponentInChildren<Camera>();
-        joystickCanvas.worldCamera = localCam.GetComponentInChildren<Camera>();
+        canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
+        canvas.planeDistance = 0.1f;
         yield return null;
     }
 

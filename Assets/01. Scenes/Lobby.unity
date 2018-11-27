@@ -703,7 +703,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 2}
       propertyPath: m_AnchorMin.y
@@ -3535,7 +3535,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.099975586, y: -96.39996}
+  m_AnchoredPosition: {x: 0.099975586, y: -96.399956}
   m_SizeDelta: {x: -77.1, y: -298}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &575298473
@@ -4599,7 +4599,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -8214,7 +8214,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -93.29999}
+  m_AnchoredPosition: {x: 0, y: -93.29998}
   m_SizeDelta: {x: -55.1, y: -241.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435615817
@@ -8456,7 +8456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1486573945
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9307,6 +9307,7 @@ MonoBehaviour:
   textCount: {fileID: 630046263}
   minimumPlayer: 1
   waitTime: 3
+  black: {fileID: 1486573944}
   playerItems:
   - name: {fileID: 993600099}
   - name: {fileID: 1371939172}
