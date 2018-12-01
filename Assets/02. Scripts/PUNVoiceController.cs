@@ -10,7 +10,7 @@ public class PUNVoiceController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        settings = GetComponent<PhotonVoiceSettings>();
+        settings = FindObjectOfType<PhotonVoiceSettings>();
         rec = FindObjectOfType<PhotonVoiceRecorder>();
 	}
 

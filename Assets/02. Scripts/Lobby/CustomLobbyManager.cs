@@ -34,6 +34,7 @@ public class CustomLobbyManager : MonoBehaviour {
 
     public void OnClickExitRoom()
     {
+        this.gameObject.SetActive(false);
         StopCoroutine(RefreshList());
         PhotonNetwork.LeaveRoom();
     }

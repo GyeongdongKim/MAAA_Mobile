@@ -7,6 +7,7 @@ using UnityStandardAssets.Cameras;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityStandardAssets.CrossPlatformInput;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using LetterboxCamera;
 
 public class GameManager : Photon.PunBehaviour {
     #region Private Variables
@@ -67,10 +68,13 @@ public class GameManager : Photon.PunBehaviour {
     public GameObject killUI;
     [HideInInspector] public bool isKillUIOn;
     public GameObject mafiaMic;
+    
     #endregion
 
     void Awake()
     {
+
+        PhotonNetwork.isMessageQueueRunning = true;
         //pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
         
@@ -87,9 +91,6 @@ public class GameManager : Photon.PunBehaviour {
     {
         StartCoroutine(Logo());
         
-        //yield return new WaitForSeconds(1.0f);
-        //string msg = "\n<color=#00ff00>[" + PhotonNetwork.player.NickName + "] Connected</color>";
-        //pv.RPC("LogMsg", PhotonTargets.AllBuffered, msg);
     }
 
     void Update()
@@ -190,6 +191,7 @@ public class GameManager : Photon.PunBehaviour {
     public void DeathCam()
     {
         localCam.GetComponent<cameraPV>().DeathCam();
+        FindObjectOfType<ForceCameraRatio>().FindAllCamerasInScene();
         isDead = true;
         playerNote.SetActive(false); miniMap.SetActive(false); killUI.SetActive(false);
     }
@@ -211,8 +213,7 @@ public class GameManager : Photon.PunBehaviour {
     public void GameStart()
     {
         StartCoroutine(SetPlayerNote());
-        //StartCoroutine(LoadScene());
-        LoadScene();
+        StartCoroutine(LoadScene());
     }
     [PunRPC]
     public void Execution()
@@ -236,17 +237,18 @@ public class GameManager : Photon.PunBehaviour {
         //}
     }
 
-    void LoadScene()
+    IEnumerator LoadScene()
     {
-        //yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.0f);
 
         GetComponent<DayNightController>().gameOver = false;
         SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
         StartCoroutine(Init());
-        //StopCoroutine(LoadScene());
+        StopCoroutine(LoadScene());
     }
     IEnumerator Init()
     {
+        yield return new WaitForSeconds(1.0f);
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
         localPlayer = PhotonNetwork.Instantiate(player.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         localCam = PhotonNetwork.Instantiate(playerCamera.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
@@ -254,7 +256,6 @@ public class GameManager : Photon.PunBehaviour {
         thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
         canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
         canvas.planeDistance = 0.1f;
-        yield return null;
     }
 
     IEnumerator SetPlayerNote()
@@ -354,24 +355,7 @@ public class GameManager : Photon.PunBehaviour {
             }
         }
     }
-
-    public void CursorOn()
-    {
-        freeLookCam.enabled = false;
-        thirdPersonUserControl.isStop=true;
-        //thirdPersonUserControl.enabled = false;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    public void CursorOff()
-    {
-        freeLookCam.enabled = true;
-        //thirdPersonUserControl.enabled = true;
-        thirdPersonUserControl.isStop=false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+    
     public void PlaySfx(Vector3 pos, float minDis,float maxDis,AudioClip sfx)
     {
         if (isSfxMute) return;
@@ -418,20 +402,12 @@ public class GameManager : Photon.PunBehaviour {
         NoteUpdate();
     }
 
-    [PunRPC]
-    void LogMsg(string msg)
-    {
-        txtLogMsg.text = txtLogMsg.text + msg;
-    }
-    
     public void OnClickExitRoom()
     {
-        //string msg = "\n<color=#ff0000>[" + PhotonNetwork.player.NickName + "] Disconnected</color>";
-        //pv.RPC("LogMsg", PhotonTargets.AllBuffered, msg);
-        //photonView.RPC("NoteUpdate", PhotonTargets.All);
+        Debug.Log("ClickQuitbutton");
         PhotonNetwork.LeaveRoom();
+        PhotonVoiceNetwork.instance.client.OpLeaveRoom();
     }
-
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();

@@ -36,6 +36,7 @@ public class RandomLobbyManager : Photon.PunBehaviour{
     public void OnClickExitRoom()
     {
         StopCoroutine(RefreshList());
+        this.gameObject.SetActive(false);
         PhotonNetwork.LeaveRoom();
     }
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)

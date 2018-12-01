@@ -10,19 +10,16 @@ public class VoteRotate : MonoBehaviour
     private Animator animator;
     private bool voteOff = true;
     private int temp;
-    private GameManager gameManager;
     public Text voteTimer;
     // Use this for initialization
     void Start()
     {
         animator = GetComponent<Animator>();
-        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
     }
 
     #region Vote
     public void VoteOn()
     {
-        gameManager.CursorOn();
         votePaper.SetActive(true);
         votePaper.GetComponentInChildren<VotePaperPanel>().InitVoteList();
         animator.SetBool("VoteOn", true);
@@ -30,7 +27,6 @@ public class VoteRotate : MonoBehaviour
     }
     public void VoteOff()
     {
-        gameManager.CursorOff();
         animator.SetBool("VoteOn", false);
         voteOff = true;
     }

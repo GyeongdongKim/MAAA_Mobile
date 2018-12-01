@@ -8,8 +8,7 @@ using PlayFab.ClientModels;
 using EasyMobile;
 
 public class LobbyManager : Photon.PunBehaviour {
-
-    [SerializeField] private string GameVersion = "0.1";
+    
 
     [HideInInspector] public string userId;
     public Text playerNameText;
@@ -34,10 +33,10 @@ public class LobbyManager : Photon.PunBehaviour {
     
     private void Awake()
     {
+        Screen.orientation = ScreenOrientation.Portrait;
         if (!PhotonNetwork.connected)
         {
             GameServices.Init();
-            //PhotonNetwork.ConnectUsingSettings(GameVersion);
             StartCoroutine(NameSet());
         }
         else { panelBlack.SetActive(false); }
@@ -90,7 +89,7 @@ public class LobbyManager : Photon.PunBehaviour {
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 15;
+        roomOptions.MaxPlayers = 8;
         PhotonNetwork.CreateRoom(PhotonNetwork.player.NickName.ToString(), roomOptions, randomLobbyType);
         Debug.Log("Create random room");
     }

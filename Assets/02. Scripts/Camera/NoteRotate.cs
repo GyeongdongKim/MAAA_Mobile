@@ -10,16 +10,13 @@ public class NoteRotate : MonoBehaviour {
     private Animator animator;
     private bool noteOff = true;
     private int temp;
-    private GameManager gameManager;
     public Text noteTimer;
 	// Use this for initialization
 	void Start () {
         animator = GetComponent<Animator>();
-        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
 	}
     public void NoteOn()
     {
-        gameManager.CursorOn();
         note.SetActive(true);
         note.GetComponentInChildren<DoctorNotePanel>().InitNoteList();
         animator.SetBool("NoteOn", true);

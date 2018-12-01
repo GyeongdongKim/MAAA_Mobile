@@ -6,6 +6,8 @@ using UnityEngine.SocialPlatforms;
 using EasyMobile.Internal;
 using PlayFab;
 using PlayFab.ClientModels;
+using LoadBalancing = ExitGames.Client.Photon.LoadBalancing;
+
 #if UNITY_IOS
 using UnityEngine.SocialPlatforms.GameCenter;
 #endif
@@ -764,6 +766,11 @@ namespace EasyMobile
                             customAuth.AddAuthParameter("token", result_in.PhotonCustomAuthenticationToken);
                             //We finally tell Photon to use this authentication parameters throughout the entire application.
                             PhotonNetwork.AuthValues = customAuth;
+
+                            var customVoiceAuth = new LoadBalancing.AuthenticationValues { AuthType = LoadBalancing.CustomAuthenticationType.Custom };
+                            customVoiceAuth.AddAuthParameter("username", result.PlayFabId);
+                            customVoiceAuth.AddAuthParameter("token", result_in.PhotonCustomAuthenticationToken);
+                            PhotonVoiceNetwork.instance.client.AuthValues = customVoiceAuth;
                             PhotonNetwork.ConnectUsingSettings("1.0");
 
                         }, (error) => { Debug.Log("Error sibal !"); });

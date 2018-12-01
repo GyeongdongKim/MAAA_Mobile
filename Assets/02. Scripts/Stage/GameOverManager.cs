@@ -95,7 +95,6 @@ public class GameOverManager : MonoBehaviour {
         day.text = gameManager.dayCount.ToString();
         total.text = totalScore.ToString();
         finalScore = totalScore;
-        gameManager.CursorOn();
         CoinSet();
         endScreen.SetActive(true);
     }

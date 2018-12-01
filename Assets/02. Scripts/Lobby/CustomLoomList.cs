@@ -66,11 +66,11 @@ public class CustomLoomList : Photon.PunBehaviour {
         {
             lobbyManager.ErrorPopup("PhotonIsNotConnected", true);
         }
-        
     }
 
     public void LeaveCustomLobby()
     {
+        this.gameObject.SetActive(false);
         PhotonNetwork.LeaveLobby();
         PhotonNetwork.JoinLobby(randomLobbyType);
     }

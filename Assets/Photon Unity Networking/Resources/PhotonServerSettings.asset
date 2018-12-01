@@ -23,44 +23,26 @@ MonoBehaviour:
   VoiceServerPort: 5055
   JoinLobby: 0
   EnableLobbyStatistics: 0
-  PunLogging: 0
-  NetworkLogging: 1
+  PunLogging: 2
+  NetworkLogging: 5
   RunInBackground: 1
   RpcList:
+  - ButtonActive
+  - Chanban
   - Chat
-  - CountCoroutine
+  - CoinGet
+  - Death
   - DestroyRpc
+  - Execution
+  - GameOver
+  - GameStart
   - InstantiateRpc
-  - LogMsg
+  - LoadBattleField
   - PickupItemInit
   - PunPickup
   - PunPickupSimple
   - PunRespawn
-  - ReFreshCards
   - RequestForPickupItems
   - RequestForPickupTimes
-  - LoadBattleField
-  - StartCount
-  - RefreshList
-  - ColorRpc
-  - DoJump
-  - Flash
-  - Marco
-  - Polo
-  - TaggedPlayer
-  - Fire
-  - Death
-  - PingMiniMap
-  - Init
-  - Survived
-  - DayChangeInit
   - Survive
-  - CoinGet
-  - Voted
-  - Execution
-  - ButtonActive
-  - Chanban
-  - GameOver
-  - GameStart
-  - NoteUpdate
   DisableAutoOpenWizard: 1

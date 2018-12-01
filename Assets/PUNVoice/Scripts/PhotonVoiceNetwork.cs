@@ -144,7 +144,7 @@ public class PhotonVoiceNetwork : MonoBehaviour
     {
         instance.client.AppId = PhotonNetwork.PhotonServerSettings.VoiceAppID;
         instance.client.AppVersion = PhotonNetwork.gameVersion;
-
+        instance.client.AuthMode = 0;
         if (PhotonNetwork.PhotonServerSettings.HostType == ServerSettings.HostingOption.SelfHosted)
         {
             string voiceMasterAddress = string.Format("{0}:{1}",PhotonNetwork.PhotonServerSettings.ServerAddress,
