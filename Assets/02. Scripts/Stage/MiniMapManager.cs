@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MiniMapManager : MonoBehaviour {
 
@@ -25,6 +23,8 @@ public class MiniMapManager : MonoBehaviour {
 
     public void DisplayPing(Vector3 playerPosition)
     {
+        if (PhotonNetwork.player.CustomProperties["Job"].ToString() != "POLICE")
+            return;
         float temp_w, temp_h;
         temp_w = ratio_w * (width.x - playerPosition.x);
         temp_h = ratio_h * (height.z - playerPosition.z);
@@ -35,11 +35,9 @@ public class MiniMapManager : MonoBehaviour {
 
     IEnumerator Ping()
     {
-        if (this.gameObject.activeSelf)
-        {
-            ping.SetActive(true);
-            yield return new WaitForSeconds(3.0f);
-            ping.SetActive(false);
-        }            
+        ping.SetActive(true);
+        yield return new WaitForSeconds(5.0f);
+        ping.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 }

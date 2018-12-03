@@ -23,8 +23,8 @@ MonoBehaviour:
   VoiceServerPort: 5055
   JoinLobby: 0
   EnableLobbyStatistics: 0
-  PunLogging: 2
-  NetworkLogging: 5
+  PunLogging: 1
+  NetworkLogging: 1
   RunInBackground: 1
   RpcList:
   - ButtonActive

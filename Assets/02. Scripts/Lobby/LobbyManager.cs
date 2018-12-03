@@ -34,13 +34,16 @@ public class LobbyManager : Photon.PunBehaviour {
     private void Awake()
     {
         Screen.orientation = ScreenOrientation.Portrait;
+        userProfileManager = GetComponent<UserProfileManager>();
         if (!PhotonNetwork.connected)
         {
             GameServices.Init();
             StartCoroutine(NameSet());
         }
-        else { panelBlack.SetActive(false); }
-        userProfileManager = GetComponent<UserProfileManager>();
+        else {
+            panelBlack.SetActive(false);
+            userProfileManager.InitCoinAndName();
+        }
         PhotonNetwork.JoinLobby(randomLobbyType);
     }
     IEnumerator NameSet()
@@ -50,8 +53,7 @@ public class LobbyManager : Photon.PunBehaviour {
         panelBlack.SetActive(false);
         panelSplash.SetActive(true);
         userId = GameServices.LocalUser.userName;
-        Debug.Log(userId);
-        playerNameText.text = userId;
+        playerNameText.text = "M_" + userId;
         PhotonNetwork.player.NickName = "M_"+userId;
         StartCoroutine(ProfileLoad());
         StopCoroutine(NameSet());

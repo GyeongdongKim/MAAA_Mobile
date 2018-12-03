@@ -211,8 +211,8 @@ public class JobManager : Photon.PunBehaviour {
 
     public void PingMiniMap(Vector3 playerPos)
     {
-        if(gameManager.miniMap.activeSelf)
-            gameManager.miniMap.GetComponent<MiniMapManager>().DisplayPing(playerPos);
+        //gameManager.miniMap.GetComponent<MiniMapManager>().DisplayPing(playerPos);
+        gameManager.PingMiniMap(playerPos);
     }
 
     public void SetPlayerJob()
@@ -225,7 +225,7 @@ public class JobManager : Photon.PunBehaviour {
                 break;
             case "POLICE":
                 isPolice = true;
-                gameManager.miniMap.SetActive(true);
+                //gameManager.miniMap.SetActive(true);
                 break;
             case "DOCTOR":
                 isDoctor = true;

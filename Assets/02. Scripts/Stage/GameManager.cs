@@ -172,7 +172,14 @@ public class GameManager : Photon.PunBehaviour {
     IEnumerator DayPrinter()
     {
         dayCount++;
-        narrText.text = dayCount.ToString() + " DAY";
+        if (dayCount == 1)
+        {
+            narrText.text = "Hello, MAAA World!";
+        }
+        else
+        {
+            narrText.text = dayCount.ToString() + " DAY Good Morning :)";
+        }
         yield return new WaitForSeconds(4.0f);
         narrText.text = "";
         StopCoroutine(DayPrinter());
@@ -191,7 +198,6 @@ public class GameManager : Photon.PunBehaviour {
     public void DeathCam()
     {
         localCam.GetComponent<cameraPV>().DeathCam();
-        FindObjectOfType<ForceCameraRatio>().FindAllCamerasInScene();
         isDead = true;
         playerNote.SetActive(false); miniMap.SetActive(false); killUI.SetActive(false);
     }
@@ -256,6 +262,9 @@ public class GameManager : Photon.PunBehaviour {
         thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
         canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
         canvas.planeDistance = 0.1f;
+
+        localPlayer.GetComponent<JobManager>().SetPlayerJob();
+        FindObjectOfType<ForceCameraRatio>().Start();
     }
 
     IEnumerator SetPlayerNote()
@@ -264,10 +273,9 @@ public class GameManager : Photon.PunBehaviour {
         for (int i = 0; i < jobImages.Count; i++)
         {
             if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
-                imageJob.GetComponent<Image>().sprite = jobImages[i].jobImage;
+                imageJob.sprite = jobImages[i].jobImage;
         }
         NoteUpdate();
-        localPlayer.GetComponent<JobManager>().SetPlayerJob();
         StopCoroutine(SetPlayerNote());
     }
 
@@ -286,6 +294,9 @@ public class GameManager : Photon.PunBehaviour {
                 PhotonNetwork.playerList[i].SetCustomProperties(playerCustomProps);
             }
             GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
+
+            if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
+                mafiaMic.SetActive(false);
             return;
         }
             
@@ -356,6 +367,11 @@ public class GameManager : Photon.PunBehaviour {
         }
     }
     
+    public void PingMiniMap(Vector3 pos)
+    {
+        miniMap.SetActive(true);
+        miniMap.GetComponent<MiniMapManager>().DisplayPing(pos);
+    }
     public void PlaySfx(Vector3 pos, float minDis,float maxDis,AudioClip sfx)
     {
         if (isSfxMute) return;

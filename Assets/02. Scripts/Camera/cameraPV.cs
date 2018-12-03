@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using LetterboxCamera;
 
 public class cameraPV : MonoBehaviour {
     public GameObject notDeadCam;
@@ -12,6 +13,7 @@ public class cameraPV : MonoBehaviour {
     {
         notDeadCam.SetActive(false);
         deadCam.SetActive(true);
+        FindObjectOfType<ForceCameraRatio>().Start();
     }
 
 }

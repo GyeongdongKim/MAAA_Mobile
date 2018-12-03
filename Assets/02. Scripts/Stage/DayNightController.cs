@@ -7,10 +7,10 @@ public class DayNightController : MonoBehaviour {
     // The directional light which we manipulate as our sun.
     public Light sun;
     public Text currentTime;
-    private bool dayChange=false;
+    private bool dayChange = false, voteTrigger = false, nightTrigger = false;
     //[HideInInspector]public GameObject[] pointlights;
     [HideInInspector] public bool gameOver=true;
-
+    public Text narrative;
     private GameManager gameManager;
 
     // The number of real-world seconds in one full game day.
@@ -27,7 +27,13 @@ public class DayNightController : MonoBehaviour {
     // A multiplier other scripts can use to speed up and slow down the passing of time.
     [HideInInspector]
     public float timeMultiplier = 1f;
+    private AudioSource audioSource;
 
+    [Header("Sound Clip")]
+    public AudioClip morningAudio;
+    public AudioClip voteAudio;
+    public AudioClip nightAudio;
+    public AudioClip shootAudio;
     // Get the initial intensity of the sun so we remember it.
     float sunInitialIntensity;
     void Start() {
@@ -35,6 +41,7 @@ public class DayNightController : MonoBehaviour {
         gameManager = GetComponent<GameManager>();
         //sun = GameObject.FindGameObjectWithTag("Sun").GetComponent<Light>();
         sunInitialIntensity = sun.intensity;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update() {
@@ -51,6 +58,8 @@ public class DayNightController : MonoBehaviour {
                 Debug.Log("dayPrint");
                 dayChange = true;
                 gameManager.DayPrint();
+                AudioManager._Instance.Fade(morningAudio, 1f, true);// I.ChangeBGM(morningAudio, false);
+                
                 //GetComponent<GameOverManager>().CheckGame();
             }
             // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
@@ -60,7 +69,22 @@ public class DayNightController : MonoBehaviour {
                 dayChange = false;
                 GetComponent<VoteManager>().trigger1 = false;
                 GetComponent<VoteManager>().trigger2 = false;
+                voteTrigger = false;nightTrigger = false;
+            }
 
+            if (currentTimeOfDay > 23f / 36f && !voteTrigger)
+            {
+                NarrationWhat("The vote will begin soon");
+                voteTrigger = true;
+                AudioManager._Instance.Fade(voteAudio, 1f, true);// I.ChangeBGM(voteAudio, true);
+            }
+
+
+            if (currentTimeOfDay > 13f / 18f && !nightTrigger)
+            {
+                NarrationWhat("Ready for the night");
+                nightTrigger = true;
+                AudioManager._Instance.Fade(nightAudio, 1f, true);// I.ChangeBGM(nightAudio, true);
             }
         }
     }
@@ -115,6 +139,18 @@ public class DayNightController : MonoBehaviour {
 
         // Multiply the intensity of the sun according to the time of day.
         sun.intensity = sunInitialIntensity * intensityMultiplier;
+    }
+
+    public void NarrationWhat(string what)
+    {
+        StartCoroutine(Narr(what));
+    }
+
+    IEnumerator Narr(string what)
+    {
+        narrative.text = what;
+        yield return new WaitForSeconds(3.0f);
+        narrative.text = "";
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

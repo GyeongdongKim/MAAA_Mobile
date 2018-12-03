@@ -6,10 +6,11 @@ public class PUNVoiceController : MonoBehaviour {
 
     private PhotonVoiceSettings settings;
     private PhotonVoiceRecorder rec;
-    private PhotonVoiceSpeaker speaker;
 
 	// Use this for initialization
-	void Start () {
+	IEnumerator Start () {
+        while (FindObjectOfType<PhotonVoiceRecorder>() == null)
+            yield return null;
         settings = FindObjectOfType<PhotonVoiceSettings>();
         rec = FindObjectOfType<PhotonVoiceRecorder>();
 	}
