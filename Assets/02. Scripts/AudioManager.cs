@@ -169,18 +169,14 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void Stop()
     {
-        this.audioSource.Stop();
+        //this.audioSource.Stop();
         this.fadeState = FadeState.None;
     }
 
     #endregion
 
     #region Methods
-
-    private void Start()
-    {
-    }
-
+    
     private void FadeToNextClip()
     {
         this.audioSource.clip = this.nextClip;
@@ -238,6 +234,16 @@ public class AudioManager : MonoBehaviour
                 // Stop fading in.
                 this.fadeState = FadeState.None;
             }
+        }
+        else if( this.fadeState==FadeState.None)
+        {
+            if (this.audioSource.volume > this.FadeOutThreshold)
+            {
+                // Fade out current clip.
+                this.audioSource.volume -= this.FadeSpeed * Time.deltaTime;
+            }
+            else
+                this.audioSource.Stop();
         }
     }
 

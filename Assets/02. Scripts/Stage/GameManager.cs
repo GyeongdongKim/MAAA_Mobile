@@ -50,7 +50,6 @@ public class GameManager : Photon.PunBehaviour {
     public MouseHover noteMouseHover;
     public MouseHover menuMouseHover0;
     public MouseHover menuMouseHover1;
-    public MouseHover debugHover;
     public MouseHover killHover;
     public MouseHover endButtonHover;
     #endregion
@@ -68,6 +67,7 @@ public class GameManager : Photon.PunBehaviour {
     public GameObject killUI;
     [HideInInspector] public bool isKillUIOn;
     public GameObject mafiaMic;
+    public GameObject panelMenu;
     
     #endregion
 
@@ -95,73 +95,10 @@ public class GameManager : Photon.PunBehaviour {
 
     void Update()
     {
-        
-        /*if (!isDead || !gameOver)
+        if (Input.GetKey(KeyCode.Escape))
         {
-            while (Input.GetKey(KeyCode.LeftShift) && trigger)
-            {
-                if (trigger)
-                { emoteAnimation.SetBool("isPressAlt", true); trigger = !trigger; }
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(0);
-            else if (Input.GetKeyDown(KeyCode.Alpha2) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(1);
-            else if (Input.GetKeyDown(KeyCode.Alpha3) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(2);
-            else if (Input.GetKeyDown(KeyCode.Alpha4) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(3);
-            else if (Input.GetKeyDown(KeyCode.Alpha5) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(4);
-            else if (Input.GetKeyDown(KeyCode.Alpha6) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(5);
-            else if (Input.GetKeyDown(KeyCode.Alpha7) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(6);
-            else if (Input.GetKeyDown(KeyCode.Alpha8) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(7);
-            else if (Input.GetKeyDown(KeyCode.Alpha9) && !trigger)
-                localPlayer.GetComponent<EmoteManager>().DisplayEmote(8);
-            while (!Input.GetKey(KeyCode.LeftShift) && !trigger)
-            {
-                if (!trigger)
-                { emoteAnimation.SetBool("isPressAlt", false); trigger = !trigger; }
-            }
-            if (Input.GetKeyDown(KeyCode.Tab))
-                easyTween.OpenCloseObjectAnimation();
-
-            else if (Input.GetMouseButtonDown(0) && Cursor.visible)
-            {
-                if (noteMouseHover.isUIHover || menuMouseHover0.isUIHover || menuMouseHover1.isUIHover ||
-                    doctorNoteHover.isUIHover || debugHover.isUIHover || voteHover.isUIHover || killHover.isUIHover || endButtonHover.isUIHover)
-                    return;
-                CursorOff();
-            }
-
-            if (GetComponent<DayNightController>().currentTimeOfDay > 0.25 && GetComponent<DayNightController>().currentTimeOfDay < 0.75)
-            {
-                isKillUIOn = false;
-                killUI.SetActive(false);
-            }
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (!freeLookCam.enabled)
-                    return;
-                CursorOn();
-            }
+            panelMenu.SetActive(true);
         }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            if (Input.GetMouseButtonDown(0) && Cursor.visible)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }*/
     }
 
     #region DayPrint
@@ -175,13 +112,16 @@ public class GameManager : Photon.PunBehaviour {
         if (dayCount == 1)
         {
             narrText.text = "Hello, MAAA World!";
+            narrText.GetComponent<Animator>().SetBool("FadeIn", true);
         }
         else
         {
             narrText.text = dayCount.ToString() + " DAY Good Morning :)";
+            narrText.GetComponent<Animator>().SetBool("FadeIn", true);
         }
         yield return new WaitForSeconds(4.0f);
-        narrText.text = "";
+        narrText.GetComponent<Animator>().SetBool("FadeIn", false);
+        //narrText.text = "";
         StopCoroutine(DayPrinter());
     }
     #endregion
@@ -198,6 +138,8 @@ public class GameManager : Photon.PunBehaviour {
     public void DeathCam()
     {
         localCam.GetComponent<cameraPV>().DeathCam();
+        canvas.worldCamera = localCam.GetComponent<cameraPV>().deathCam;
+        canvas.planeDistance = 0.1f;
         isDead = true;
         playerNote.SetActive(false); miniMap.SetActive(false); killUI.SetActive(false);
     }
@@ -420,9 +362,8 @@ public class GameManager : Photon.PunBehaviour {
 
     public void OnClickExitRoom()
     {
-        Debug.Log("ClickQuitbutton");
+        AudioManager._Instance.Stop();
         PhotonNetwork.LeaveRoom();
-        PhotonVoiceNetwork.instance.client.OpLeaveRoom();
     }
     public override void OnLeftRoom()
     {

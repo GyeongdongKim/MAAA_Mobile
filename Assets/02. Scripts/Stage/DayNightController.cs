@@ -149,8 +149,10 @@ public class DayNightController : MonoBehaviour {
     IEnumerator Narr(string what)
     {
         narrative.text = what;
+        narrative.GetComponent<Animator>().SetBool("FadeIn", true);
         yield return new WaitForSeconds(3.0f);
-        narrative.text = "";
+        narrative.GetComponent<Animator>().SetBool("FadeIn", false);
+        //narrative.text = "";
     }
 
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

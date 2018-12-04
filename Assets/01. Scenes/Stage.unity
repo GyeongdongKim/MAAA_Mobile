@@ -1688,6 +1688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 321787857}
   - component: {fileID: 321787859}
+  - component: {fileID: 321787858}
   m_Layer: 5
   m_Name: MicButtons
   m_TagString: Untagged
@@ -1716,6 +1717,29 @@ RectTransform:
   m_AnchoredPosition: {x: -284, y: -79.79999}
   m_SizeDelta: {x: 270, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &321787858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 321787856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2095666955, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 5
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 90, y: 140}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 2
+  m_ConstraintCount: 1
 --- !u!114 &321787859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2283,7 +2307,6 @@ MonoBehaviour:
   noteMouseHover: {fileID: 310601587}
   menuMouseHover0: {fileID: 745568518}
   menuMouseHover1: {fileID: 1928849735}
-  debugHover: {fileID: 0}
   killHover: {fileID: 1339320523}
   endButtonHover: {fileID: 965921253}
   canvas: {fileID: 1775335815}
@@ -2297,6 +2320,7 @@ MonoBehaviour:
   killUI: {fileID: 1494686326}
   isKillUIOn: 0
   mafiaMic: {fileID: 752539837}
+  panelMenu: {fileID: 1928849731}
 --- !u!4 &381494830
 Transform:
   m_ObjectHideFlags: 0
@@ -2661,7 +2685,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.00006738369}
+  m_AnchoredPosition: {x: 0, y: 0.000049833332}
   m_SizeDelta: {x: 306, y: 534}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &473514304
@@ -3334,6 +3358,7 @@ GameObject:
   - component: {fileID: 565385943}
   - component: {fileID: 565385945}
   - component: {fileID: 565385944}
+  - component: {fileID: 565385946}
   m_Layer: 5
   m_Name: TextNarration
   m_TagString: Untagged
@@ -3399,6 +3424,24 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 565385942}
   m_CullTransparentMesh: 0
+--- !u!95 &565385946
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 565385942}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9bccce0643a219d448cb4c1ebfbc7cbe, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &571194712
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,10 +3597,10 @@ RectTransform:
   m_Father: {fileID: 321787857}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -44.75, y: -69.74996}
-  m_SizeDelta: {x: 90, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &646138452
 MonoBehaviour:
@@ -4291,10 +4334,10 @@ RectTransform:
   m_Father: {fileID: 321787857}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -134.74997, y: -69.74996}
-  m_SizeDelta: {x: 90, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &752539839
 MonoBehaviour:
@@ -8292,10 +8335,10 @@ RectTransform:
   m_Father: {fileID: 321787857}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -224.74998, y: -69.74996}
-  m_SizeDelta: {x: 90, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1729704070
 MonoBehaviour:

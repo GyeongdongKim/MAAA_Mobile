@@ -7037,6 +7037,7 @@ MonoBehaviour:
   notDeadCam: {fileID: 1882837824447986}
   deadCam: {fileID: 1493048609379646}
   cam: {fileID: 20236395313677846}
+  deathCam: {fileID: 20495522406758320}
 --- !u!114 &114750341824193092
 MonoBehaviour:
   m_ObjectHideFlags: 1
