@@ -171,8 +171,6 @@ namespace LetterboxCamera
             }
 
             // If requested, a Camera will be generated that renders a letter box Color
-            if (letterBoxCamera != null)
-                Destroy(letterBoxCamera);
 
             if (createCameraForLetterBoxRendering) {
                 letterBoxCamera = new GameObject().AddComponent<Camera>();
@@ -187,7 +185,7 @@ namespace LetterboxCamera
 
                 for (int i = 0; i < cameras.Count; i++) {
                     if (cameras[i].camera.depth == -100) {
-                        Debug.LogError(cameras[i].camera.name + " has a depth of -100 and may conflict with the Letter Box Camera in Forced Camera Ratio!");
+                        Debug.Log(cameras[i].camera.name + " has a depth of -100 and may conflict with the Letter Box Camera in Forced Camera Ratio!");
                     }
                 }
             }
