@@ -46,12 +46,6 @@ public class GameManager : Photon.PunBehaviour {
 
     private bool trigger = true;
     [HideInInspector] public bool isDead = false, gameOver = false;
-    [Header("Mouse Hover")]
-    public MouseHover noteMouseHover;
-    public MouseHover menuMouseHover0;
-    public MouseHover menuMouseHover1;
-    public MouseHover killHover;
-    public MouseHover endButtonHover;
     #endregion
 
     #region UI Variables

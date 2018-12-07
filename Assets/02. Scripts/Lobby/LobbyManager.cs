@@ -153,6 +153,7 @@ public class LobbyManager : Photon.PunBehaviour {
         Debug.LogError(error.GenerateErrorReport());
         ErrorPopup("PlayfabLoginError", true);
         ErrorPopup(error.GenerateErrorReport(), false);
+        
     }
 
     public void ErrorPopup(string errorMessage,bool clean)
@@ -178,6 +179,7 @@ public class LobbyManager : Photon.PunBehaviour {
         base.OnFailedToConnectToPhoton(cause);
         ErrorPopup("FailedToConnectToPhoton",true);
         ErrorPopup(cause.ToString(),false);
+        PhotonNetwork.Reconnect();
     }
     public override void OnCustomAuthenticationFailed(string debugMessage)
     {

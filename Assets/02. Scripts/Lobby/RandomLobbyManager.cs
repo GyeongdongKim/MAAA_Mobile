@@ -21,7 +21,7 @@ public class RandomLobbyManager : Photon.PunBehaviour{
 
     void Start() {
         pv = GetComponent<PhotonView>();
-        textCount.text = "";
+        textCount.text = "WAIT FOR 8 PLAYERS";
     }
 
     void Update() {
@@ -42,20 +42,14 @@ public class RandomLobbyManager : Photon.PunBehaviour{
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
         base.OnPhotonPlayerConnected(newPlayer);
-        Debug.Log("OnPPConnected");
-        //RefreshList();
     }
     public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
     {
         base.OnPhotonPlayerDisconnected(otherPlayer);
-        Debug.Log("OnPPDisconnected");
-        //RefreshList();
     }
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
-        Debug.Log("OnCreatedRoom");
-        //RefreshList();
     }
 
     IEnumerator RefreshList()
