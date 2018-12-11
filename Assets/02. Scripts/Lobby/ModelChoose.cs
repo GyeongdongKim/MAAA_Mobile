@@ -7,7 +7,8 @@ public class ModelChoose : MonoBehaviour {
 
     public Transform[] models;
     public GameObject bottomIcons,startButton;
-    public CinemachineVirtualCamera vCam1,vCam2,lobbyCam;
+    public CinemachineVirtualCamera lobbyCam;
+    public CinemachineVirtualCamera[] vCams;
     public GameObject buttonleft, buttonright,buttonreturn;
     [HideInInspector]public int modelIndex=0;
     private bool toggle=true;
@@ -15,7 +16,7 @@ public class ModelChoose : MonoBehaviour {
 
     // Use this for initialization
 	void Start () {
-        
+        SetAnimate();
 	}
 	
 	// Update is called once per frame
@@ -28,6 +29,21 @@ public class ModelChoose : MonoBehaviour {
             }
         }
 	}
+
+    void SetAnimate()
+    {
+        models[0].GetComponent<Animator>().SetBool("isBboy",true);
+        models[1].GetComponent<Animator>().SetBool("isLean", true);
+        models[2].GetComponent<Animator>().SetBool("isGolf", true);
+        models[3].GetComponent<Animator>().SetBool("isMaleStanding2", true);
+        models[4].GetComponent<Animator>().SetBool("isMaleStanding4", true);
+        models[5].GetComponent<Animator>().SetBool("isFemaleSitting", true);
+        models[6].GetComponent<Animator>().SetBool("isSitTalk", true);
+        models[7].GetComponent<Animator>().SetBool("isSitting", true);
+        models[8].GetComponent<Animator>().SetBool("isSinging", true);
+        models[9].GetComponent<Animator>().SetBool("isMaleStanding", true);
+
+    }
 
     public void OnClickRandomGame()
     {
@@ -51,7 +67,40 @@ public class ModelChoose : MonoBehaviour {
         startButton.transform.DOLocalMoveY(-620f, 1);
     }
 
-    IEnumerator ChangeTarget(bool Right)
+    void ChangeTarget(bool isRight)
+    {
+        vCams[modelIndex].Priority = 0;
+        if (isRight)
+        {
+            if (modelIndex == 9)
+                modelIndex = 0;
+            else
+                modelIndex++;
+        }
+        else
+        {
+            if (modelIndex == 0)
+                modelIndex = 9;
+            else
+                modelIndex--;
+        }
+        vCams[modelIndex].Priority = 1;
+
+    }
+
+    public void OnClickLeftButton()
+    {
+        //StartCoroutine(ChangeTarget(false));
+        ChangeTarget(false);
+    }
+
+    public void OnClickRightButton()
+    {
+        //StartCoroutine(ChangeTarget(true));
+        ChangeTarget(true);
+    }
+
+    /*IEnumerator ChangeTarget(bool Right)
     {
         toggle = !toggle;
         if (Right)
@@ -116,17 +165,5 @@ public class ModelChoose : MonoBehaviour {
                 StopCoroutine("ChangeTarget");
             }
         }
-    }
-
-    public void OnClickLeftButton()
-    {
-        StartCoroutine(ChangeTarget(false));
-        //ChangeTarget(false);
-    }
-
-    public void OnClickRightButton()
-    {
-        StartCoroutine(ChangeTarget(true));
-        //ChangeTarget(true);
-    }
+    }*/
 }

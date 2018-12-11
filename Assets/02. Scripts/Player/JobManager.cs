@@ -26,7 +26,18 @@ public class JobManager : Photon.PunBehaviour {
     [HideInInspector] public int coinScore;
 
     private DayNightController dayNightController;
-    void Start() {
+    void Start() {/*
+        pv = GetComponent<PhotonView>();
+        animator = GetComponent<Animator>();
+        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
+        dayNightController = gameManager.GetComponent<DayNightController>();
+        noteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<NoteRotate>();
+        voteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<VoteRotate>();
+        shooted = false;*/
+    }
+    private void OnEnable()
+    {
+
         pv = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
         gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
@@ -35,7 +46,6 @@ public class JobManager : Photon.PunBehaviour {
         voteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<VoteRotate>();
         shooted = false;
     }
-
     private void Update()
     {
         if (!gameManager.isDead)

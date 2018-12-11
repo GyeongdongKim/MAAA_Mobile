@@ -64,8 +64,8 @@ public class GameManager : Photon.PunBehaviour {
     #endregion
 
     void Awake()
-    {
-
+    {/*
+        StartCoroutine(Logo());
         PhotonNetwork.isMessageQueueRunning = true;
         //pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
@@ -80,12 +80,28 @@ public class GameManager : Photon.PunBehaviour {
         localCam = readyManager.localCam;
         localPlayer = readyManager.localPlayer;
         thirdPersonUserControl = readyManager.thirdPersonUserControl;
-        freeLookCam = readyManager.freeLookCam;
+        freeLookCam = readyManager.freeLookCam;*/
     }
 
-    void Start()
+    private void OnEnable()
     {
         StartCoroutine(Logo());
+        PhotonNetwork.isMessageQueueRunning = true;
+        //pv = GetComponent<PhotonView>();
+        easyTween = GetComponent<EasyTween>();
+        readyManager = FindObjectOfType<ReadyManager>();
+        if (PhotonNetwork.player.IsMasterClient)
+        {
+            SetPlayerJob();
+        }
+        //StartCoroutine(SetPlayerNote());
+        //SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
+        //StartCoroutine(Init());
+        localCam = readyManager.localCam;
+        localPlayer = readyManager.localPlayer;
+        localPlayer.GetComponent<JobManager>().enabled = true;
+        thirdPersonUserControl = readyManager.thirdPersonUserControl;
+        freeLookCam = readyManager.freeLookCam;
     }
 
     void Update()
@@ -138,20 +154,21 @@ public class GameManager : Photon.PunBehaviour {
                 return;
             noteList.playerLists[i].GetComponent<Text>().text = PhotonNetwork.playerList[i].NickName;
         }
-        for (int i = PhotonNetwork.room.PlayerCount; i < 15; i++)
+        for (int i = PhotonNetwork.room.PlayerCount; i < 8; i++)
         {
             noteList.playerLists[i].GetComponent<Text>().text = "";
         }
     }
+
     [PunRPC]
     public void GameStart()
     {
-
         for (int i = 0; i < jobImages.Count; i++)
         {
             if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
                 imageJob.sprite = jobImages[i].jobImage;
         }
+        
         NoteUpdate();
         //StartCoroutine(SetPlayerNote());
 
@@ -220,7 +237,7 @@ public class GameManager : Photon.PunBehaviour {
         int temp = PhotonNetwork.room.PlayerCount;
         int mafia1=0, mafia2=0, doctor=0, police=0;
 
-        if (!PhotonNetwork.isMasterClient || temp < 4)
+        if (PhotonNetwork.isMasterClient || temp < 4)
         {
             for (int i = 0; i < temp; i++)
             {
@@ -273,7 +290,7 @@ public class GameManager : Photon.PunBehaviour {
         GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
         if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
             mafiaMic.SetActive(false);
-
+        localPlayer.GetComponent<JobManager>().SetPlayerJob();
     }
 
     IEnumerator Logo()

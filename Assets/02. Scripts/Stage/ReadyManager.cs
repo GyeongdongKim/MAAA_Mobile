@@ -22,6 +22,7 @@ public class ReadyManager : Photon.PunBehaviour {
 
     // Use this for initialization
     void Start () {
+        timeText.GetComponent<Animator>().SetBool("FadeIn",true);
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
         localPlayer = PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         localCam = PhotonNetwork.Instantiate("Cameras", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
@@ -30,7 +31,7 @@ public class ReadyManager : Photon.PunBehaviour {
         canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
         canvas.planeDistance = 0.1f;
 
-        localPlayer.GetComponent<JobManager>().SetPlayerJob();
+        //localPlayer.GetComponent<JobManager>().SetPlayerJob();
         FindObjectOfType<ForceCameraRatio>().Start();
     }
     private void Update()
@@ -42,9 +43,12 @@ public class ReadyManager : Photon.PunBehaviour {
         }
         if (t <= 0)
         {
-            GameStart();
-            timeText.text = "";
             t = 100;
+            timeText.text = "";
+            timeText.GetComponent<Animator>().SetBool("FadeIn", false);
+
+            if (PhotonNetwork.isMasterClient)
+                GetComponent<PhotonView>().RPC("GameReady", PhotonTargets.All);
         }
     }
 
@@ -76,7 +80,8 @@ public class ReadyManager : Photon.PunBehaviour {
         playersCount = PhotonNetwork.room.PlayerCount;
     }
 
-    public void GameStart()
+    [PunRPC]
+    public void GameReady()
     {
         for (int i = 0; i < gameObjects.Length; i++)
         {

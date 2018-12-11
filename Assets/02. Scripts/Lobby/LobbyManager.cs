@@ -49,7 +49,7 @@ public class LobbyManager : Photon.PunBehaviour {
             panelSplash.SetActive(false);
             userProfileManager.InitCoinAndName(false);
         }
-        PhotonNetwork.automaticallySyncScene = true;
+        //PhotonNetwork.automaticallySyncScene = true;
     }
     IEnumerator NameSet()
     {
@@ -70,6 +70,7 @@ public class LobbyManager : Photon.PunBehaviour {
         StopCoroutine(ProfileLoad());
     }
     void Start() {
+        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
     }
 
     void Update() {
@@ -155,11 +156,20 @@ public class LobbyManager : Photon.PunBehaviour {
             //randomLobbyManager.ClickButtonAndRefreshList();
         }
         else
-            ErrorPopup("Network Is Not Connected !",true);
+        {
+            ErrorPopup("Network Is Not Connected !", true);
+            PhotonNetwork.Reconnect();
+        }
     }
     public void OnClickStartButton()
     {
-        PhotonNetwork.JoinRandomRoom();
+        if (PhotonNetwork.lobby == randomLobbyType)
+            PhotonNetwork.JoinRandomRoom();
+        else
+        {
+            PhotonNetwork.JoinLobby(randomLobbyType);
+            PhotonNetwork.JoinRandomRoom();
+        }
     }
 
     private void OnLoginSuccess(LoginResult result)

@@ -29,6 +29,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public float FadeSpeed = 0.05f;
 
+    public AudioClip lobbyMusic;
     /// <summary>
     ///   Actual audio source.
     /// </summary>
@@ -64,7 +65,9 @@ public class AudioManager : MonoBehaviour
 
         FadingOut,
 
-        FadingIn
+        FadingIn,
+
+        Stop
     }
 
     #endregion
@@ -170,7 +173,7 @@ public class AudioManager : MonoBehaviour
     public void Stop()
     {
         //this.audioSource.Stop();
-        this.fadeState = FadeState.None;
+        this.fadeState = FadeState.Stop;
     }
 
     #endregion
@@ -235,7 +238,7 @@ public class AudioManager : MonoBehaviour
                 this.fadeState = FadeState.None;
             }
         }
-        else if( this.fadeState==FadeState.None)
+        else if( this.fadeState==FadeState.Stop)
         {
             if (this.audioSource.volume > this.FadeOutThreshold)
             {

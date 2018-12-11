@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class RandomLobbyManager : Photon.PunBehaviour{
     private PhotonView pv;
     private bool isStart=false;
-    private bool isCount = false;
+    //private bool isCount = false;
     public Text textCount;
     public int minimumPlayer;
     public int waitTime;
