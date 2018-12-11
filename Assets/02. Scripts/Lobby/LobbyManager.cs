@@ -7,6 +7,8 @@ using PlayFab;
 using PlayFab.ClientModels;
 using EasyMobile;
 
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
 public class LobbyManager : Photon.PunBehaviour {
     
 
@@ -15,11 +17,13 @@ public class LobbyManager : Photon.PunBehaviour {
    
     private GameObject target;
     public GameObject exitUI;
-    public GameObject panelBlack, panelSplash;
+    public GameObject panelSplash;
     public GameObject errorPopup;
     public Text errorText;
     public GameObject successPopup;
     public Text successText;
+
+    public ModelChoose modelChoose;
     [Header("MoniterIconUI")]
     public RandomLobbyManager randomLobbyManager;
     public CustomLobbyManager customLobbyManager;
@@ -27,31 +31,31 @@ public class LobbyManager : Photon.PunBehaviour {
     public GameObject randomLobby;
     public GameObject customRoomList;
 
+    Hashtable playerCustomProps = new Hashtable();
     private string _playFabPlayerIdCache;
     private UserProfileManager userProfileManager;
     TypedLobby randomLobbyType = new TypedLobby("Random", LobbyType.Default);
     
     private void Awake()
     {
-        Screen.orientation = ScreenOrientation.Portrait;
         userProfileManager = GetComponent<UserProfileManager>();
         if (!PhotonNetwork.connected)
         {
+            panelSplash.SetActive(true);
             GameServices.Init();
             StartCoroutine(NameSet());
         }
         else {
-            panelBlack.SetActive(false);
-            userProfileManager.InitCoinAndName();
+            panelSplash.SetActive(false);
+            userProfileManager.InitCoinAndName(false);
         }
-        PhotonNetwork.JoinLobby(randomLobbyType);
+        PhotonNetwork.automaticallySyncScene = true;
     }
     IEnumerator NameSet()
     {
         while (!GameServices.IsInitialized()||!PhotonNetwork.connected)
             yield return null;
-        panelBlack.SetActive(false);
-        panelSplash.SetActive(true);
+        panelSplash.SetActive(false);
         userId = GameServices.LocalUser.userName;
         playerNameText.text = "M_" + userId;
         PhotonNetwork.player.NickName = "M_"+userId;
@@ -62,7 +66,7 @@ public class LobbyManager : Photon.PunBehaviour {
     {
         while (!PlayFabClientAPI.IsClientLoggedIn())
             yield return null;
-        userProfileManager.InitCoinAndName();
+        userProfileManager.InitCoinAndName(true);
         StopCoroutine(ProfileLoad());
     }
     void Start() {
@@ -76,8 +80,8 @@ public class LobbyManager : Photon.PunBehaviour {
                 exitUI.SetActive(true);
             }
         }
-        
     }
+
     #region PhotonNetworkFunction
     public override void OnJoinedLobby()
     {
@@ -100,10 +104,18 @@ public class LobbyManager : Photon.PunBehaviour {
     {
         base.OnPhotonCreateRoomFailed(codeAndMsg);
     }
+    public override void OnCreatedRoom()
+    {
+        base.OnCreatedRoom();
+    }
 
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
+
+        playerCustomProps["Avatar"] = modelChoose.modelIndex;
+        PhotonNetwork.player.SetCustomProperties(playerCustomProps);
+        PhotonNetwork.LoadLevel("Stage");
     }
 
     public void OnClickExitRoom() //Exit 버튼 눌렀을 때 작동하는 함수
@@ -131,14 +143,23 @@ public class LobbyManager : Photon.PunBehaviour {
 
     public void OnClickJoinRandomRoom()
     {
+
+        //modelChoose.OnClickRandomGame();
         if (PhotonNetwork.connected)
         {
-            PhotonNetwork.JoinRandomRoom();
-            randomLobby.SetActive(true);
-            randomLobbyManager.ClickButtonAndRefreshList();
+            modelChoose.OnClickRandomGame();
+
+            PhotonNetwork.JoinLobby(randomLobbyType);
+            //PhotonNetwork.JoinRandomRoom();
+            //randomLobby.SetActive(true);
+            //randomLobbyManager.ClickButtonAndRefreshList();
         }
         else
-            ErrorPopup("PhotonNetworkIsNotConnected",true);
+            ErrorPopup("Network Is Not Connected !",true);
+    }
+    public void OnClickStartButton()
+    {
+        PhotonNetwork.JoinRandomRoom();
     }
 
     private void OnLoginSuccess(LoginResult result)

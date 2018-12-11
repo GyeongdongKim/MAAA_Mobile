@@ -9,10 +9,6 @@ public class MouseHover : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 
     private void Start()
     {
-        if (this.gameObject.tag == "CAM")        
-            GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>().NoteHover(this);
-        if(this.gameObject.tag=="VOTEPAPER")
-            GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>().VoteHover(this);
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

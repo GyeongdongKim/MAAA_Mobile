@@ -116,10 +116,6 @@ public class RandomLobbyManager : Photon.PunBehaviour{
     public void LoadBattleField()
     {
         black.SetActive(true);
-        Screen.orientation = ScreenOrientation.Landscape;
-        Screen.autorotateToLandscapeLeft = true;
-        Screen.autorotateToLandscapeRight = true;
-        PhotonNetwork.isMessageQueueRunning = false;
         SceneManager.LoadScene("Stage");
     }
 }

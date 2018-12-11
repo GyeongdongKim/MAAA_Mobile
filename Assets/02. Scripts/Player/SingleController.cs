@@ -12,14 +12,13 @@ public class SingleController : MonoBehaviour {
     private void Start()
     {
         jobManager = GetComponent<JobManager>();
-        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
         noteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<NoteRotate>();
     }
 
     void Update () {
-        if (CrossPlatformInputManager.GetButtonDown("Kill") && gameManager.isKillUIOn)
+        if (CrossPlatformInputManager.GetButtonDown("Kill") && FindObjectOfType<GameManager>().isKillUIOn)
         {
-            jobManager.AttackCoroutine(gameManager.GetObjectWithPoint(15.0f));
+            jobManager.AttackCoroutine(FindObjectOfType<GameManager>().GetObjectWithPoint(15.0f));
         }
     }
 }

@@ -3118,8 +3118,6 @@ MonoBehaviour:
   avatars:
   - avatar: {fileID: 9000000, guid: 73837d26e721e6d4fbdd3767474bd757, type: 3}
     prefab: {fileID: 1050423772210116, guid: 6709f2f57429f8649818dffd11d8fc6e, type: 2}
-  - avatar: {fileID: 9000000, guid: 73837d26e721e6d4fbdd3767474bd757, type: 3}
-    prefab: {fileID: 1050423772210116, guid: 6709f2f57429f8649818dffd11d8fc6e, type: 2}
   - avatar: {fileID: 9000000, guid: df3c4b03a657bda4b9664fe4a96f5827, type: 3}
     prefab: {fileID: 1411858403885396, guid: 17eecee3f4588e54d84a12042db71356, type: 2}
   - avatar: {fileID: 9000000, guid: afb6ac04594b34745b503e55705b8219, type: 3}
@@ -3174,7 +3172,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1144418071674290}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a42af2277e4e87042b2a1e72d7a3b8b3, type: 3}
   m_Name: 

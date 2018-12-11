@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityStandardAssets.Cameras;
 using UnityStandardAssets.Characters.ThirdPerson;
 using UnityStandardAssets.CrossPlatformInput;
@@ -16,7 +15,7 @@ public class GameManager : Photon.PunBehaviour {
 
     [HideInInspector] public MouseHover doctorNoteHover, voteHover;
     private EasyTween easyTween;
-
+    private ReadyManager readyManager;
     [System.Serializable]
     public class JobImage
     {
@@ -51,7 +50,6 @@ public class GameManager : Photon.PunBehaviour {
     #region UI Variables
     [Header("UI Variables")]
     public Canvas canvas;
-    public Canvas joystickCanvas;
     public Text narrText;
     public Text txtLogMsg;
     [SerializeField] private Image imageJob;
@@ -71,7 +69,7 @@ public class GameManager : Photon.PunBehaviour {
         PhotonNetwork.isMessageQueueRunning = true;
         //pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
-        
+        readyManager = FindObjectOfType<ReadyManager>();
         if (PhotonNetwork.player.IsMasterClient)
         {
             SetPlayerJob();
@@ -79,12 +77,15 @@ public class GameManager : Photon.PunBehaviour {
         //StartCoroutine(SetPlayerNote());
         //SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
         //StartCoroutine(Init());
+        localCam = readyManager.localCam;
+        localPlayer = readyManager.localPlayer;
+        thirdPersonUserControl = readyManager.thirdPersonUserControl;
+        freeLookCam = readyManager.freeLookCam;
     }
 
     void Start()
     {
         StartCoroutine(Logo());
-        
     }
 
     void Update()
@@ -120,15 +121,6 @@ public class GameManager : Photon.PunBehaviour {
     }
     #endregion
 
-    public void NoteHover(MouseHover mouseHover)
-    {
-        doctorNoteHover = mouseHover;
-    }
-    public void VoteHover(MouseHover mouseHover)
-    {
-        voteHover = mouseHover;
-    }
-
     public void DeathCam()
     {
         localCam.GetComponent<cameraPV>().DeathCam();
@@ -154,8 +146,17 @@ public class GameManager : Photon.PunBehaviour {
     [PunRPC]
     public void GameStart()
     {
-        StartCoroutine(SetPlayerNote());
-        StartCoroutine(LoadScene());
+
+        for (int i = 0; i < jobImages.Count; i++)
+        {
+            if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
+                imageJob.sprite = jobImages[i].jobImage;
+        }
+        NoteUpdate();
+        //StartCoroutine(SetPlayerNote());
+
+        GetComponent<DayNightController>().gameOver = false;
+        //StartCoroutine(LoadScene());
     }
     [PunRPC]
     public void Execution()
@@ -184,11 +185,10 @@ public class GameManager : Photon.PunBehaviour {
         yield return new WaitForSeconds(1.0f);
 
         GetComponent<DayNightController>().gameOver = false;
-        SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
-        StartCoroutine(Init());
+        //StartCoroutine(Init());
         StopCoroutine(LoadScene());
     }
-    IEnumerator Init()
+    /*IEnumerator Init()
     {
         yield return new WaitForSeconds(1.0f);
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
@@ -201,7 +201,7 @@ public class GameManager : Photon.PunBehaviour {
 
         localPlayer.GetComponent<JobManager>().SetPlayerJob();
         FindObjectOfType<ForceCameraRatio>().Start();
-    }
+    }*/
 
     IEnumerator SetPlayerNote()
     {
@@ -226,7 +226,7 @@ public class GameManager : Photon.PunBehaviour {
             {
                 playerCustomProps["Job"] = "CITIZEN";
                 playerCustomProps["Death"] = false;
-                playerCustomProps["Avatar"] = Random.Range(0, 10);
+                //playerCustomProps["Avatar"] = Random.Range(0, 10);
                 PhotonNetwork.playerList[i].SetCustomProperties(playerCustomProps);
             }
             GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
@@ -251,21 +251,21 @@ public class GameManager : Photon.PunBehaviour {
             if (i == mafia1||i==mafia2)
             {
                 playerCustomProps["Job"] = "MAFIA";
-                playerCustomProps["Avatar"] = Random.Range(0, 10);
+                //playerCustomProps["Avatar"] = Random.Range(0, 10);
             }
             else if (i == doctor)
             {
                 playerCustomProps["Job"] = "DOCTOR";
-                playerCustomProps["Avatar"] = Random.Range(0, 10);
+                //playerCustomProps["Avatar"] = Random.Range(0, 10);
             }
             else if (i==police)
             {
                 playerCustomProps["Job"] = "POLICE";
-                playerCustomProps["Avatar"] = Random.Range(0, 10);
+                //playerCustomProps["Avatar"] = Random.Range(0, 10);
             }else
             {
                 playerCustomProps["Job"] = "CITIZEN";
-                playerCustomProps["Avatar"] = Random.Range(0, 10);
+                //playerCustomProps["Avatar"] = Random.Range(0, 10);
             }
             playerCustomProps["Death"] = false;
             playerList[i].SetCustomProperties(playerCustomProps);
@@ -354,15 +354,5 @@ public class GameManager : Photon.PunBehaviour {
         NoteUpdate();
     }
 
-    public void OnClickExitRoom()
-    {
-        AudioManager._Instance.Stop();
-        PhotonNetwork.LeaveRoom();
-    }
-    public override void OnLeftRoom()
-    {
-        base.OnLeftRoom();
-        SceneManager.LoadScene("Lobby");
-    }
     #endregion
 }

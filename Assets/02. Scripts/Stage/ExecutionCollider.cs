@@ -9,7 +9,9 @@ public class ExecutionCollider : MonoBehaviour {
 	}
     private void Update()
     {
-        if (dnc.currentTimeOfDay > 2f / 3f && dnc.currentTimeOfDay < 0.75f)
+        if (dnc == null)
+            return;
+        else if (dnc.currentTimeOfDay > 2f / 3f && dnc.currentTimeOfDay < 0.75f)
             colliders.SetActive(true);
         else
             colliders.SetActive(false);

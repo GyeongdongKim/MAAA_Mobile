@@ -27,25 +27,33 @@ public class UserProfileManager : MonoBehaviour
     Vector3 pivot = new Vector2(0.5f, 0.5f);
 
     // Use this for initialization
-    public void InitCoinAndName()
+    public void InitCoinAndName(bool init)
     {
-        if (GetUserData("MafiaCoin") == null)
+        if (init)
         {
-            SetUserData("MafiaCoin", "0");
-            mafiaCoin = "0";
+            if (GetUserData("MafiaCoin") == null)
+            {
+                SetUserData("MafiaCoin", "0");
+                mafiaCoin = "0";
+            }
+            else
+                mafiaCoin = GetUserData("MafiaCoin");
+            textMafiaCoin.text = mafiaCoin;
+
+            PlayFabClientAPI.UpdateUserTitleDisplayName(
+                new UpdateUserTitleDisplayNameRequest { DisplayName = displayName.text },
+                result => {
+                    Debug.Log("Success to set Name");
+                }, (error) => {
+                    Debug.Log("Got error retrieving user data:");
+                    Debug.Log(error.GenerateErrorReport());
+                });
         }
         else
+        {
+            displayName.text = PhotonNetwork.player.NickName;
             mafiaCoin = GetUserData("MafiaCoin");
-        textMafiaCoin.text = mafiaCoin;
-
-        PlayFabClientAPI.UpdateUserTitleDisplayName(
-            new UpdateUserTitleDisplayNameRequest { DisplayName = displayName.text },
-            result => {
-                Debug.Log("Success to set Name");
-            }, (error) => {
-                Debug.Log("Got error retrieving user data:");
-                Debug.Log(error.GenerateErrorReport());
-            });
+        }
     }
 
     public void SetUserData(string key, string data)

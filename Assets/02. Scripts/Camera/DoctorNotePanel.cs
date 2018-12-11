@@ -13,22 +13,20 @@ public class DoctorNotePanel : MonoBehaviour {
     }
     public List<Players> players;
     public NoteRotate noteRotate;
-    private GameManager gameManager;
 
     private void Start()
     {
-        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
     }
 
     public void OnClickPlayerName(Text playerName)
     {
-        gameManager.playerToSurvive=playerName.text;
+        FindObjectOfType<GameManager>().playerToSurvive=playerName.text;
         noteRotate.NoteOff();
     }
 
     public void NoSelectPlayer()
     {
-        gameManager.playerToSurvive = PhotonNetwork.player.NickName;
+        FindObjectOfType<GameManager>().playerToSurvive = PhotonNetwork.player.NickName;
     }
 
     public void InitNoteList()
