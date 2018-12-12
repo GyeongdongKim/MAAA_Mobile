@@ -7,6 +7,7 @@ public class ModelChoose : MonoBehaviour {
 
     public Transform[] models;
     public GameObject bottomIcons,startButton;
+    public Light[] lightObjects;
     public CinemachineVirtualCamera lobbyCam;
     public CinemachineVirtualCamera[] vCams;
     public GameObject buttonleft, buttonright,buttonreturn;
@@ -54,6 +55,7 @@ public class ModelChoose : MonoBehaviour {
         buttonreturn.SetActive(true);
         bottomIcons.transform.DOLocalMoveY(-670f, 1);
         startButton.transform.DOLocalMoveY(-460f, 1);
+        LightControl(true);
     }
 
     public void OnClickOut()
@@ -65,6 +67,22 @@ public class ModelChoose : MonoBehaviour {
         buttonreturn.SetActive(false);
         bottomIcons.transform.DOLocalMoveY(-415f, 1);
         startButton.transform.DOLocalMoveY(-620f, 1);
+        LightControl(false);
+    }
+
+    void LightControl(bool isTurn)
+    {
+        for (int i = 0; i < lightObjects.Length; i++)
+        {
+            if (isTurn)
+            {
+                lightObjects[i].intensity = 1;
+            }
+            else
+            {
+                lightObjects[i].intensity = 0;
+            }
+        }
     }
 
     void ChangeTarget(bool isRight)

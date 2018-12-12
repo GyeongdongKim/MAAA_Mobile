@@ -56,6 +56,7 @@ public class LobbyManager : Photon.PunBehaviour {
         while (!GameServices.IsInitialized()||!PhotonNetwork.connected)
             yield return null;
         panelSplash.SetActive(false);
+        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
         userId = GameServices.LocalUser.userName;
         playerNameText.text = "M_" + userId;
         PhotonNetwork.player.NickName = "M_"+userId;
@@ -70,7 +71,7 @@ public class LobbyManager : Photon.PunBehaviour {
         StopCoroutine(ProfileLoad());
     }
     void Start() {
-        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
+        
     }
 
     void Update() {
@@ -115,6 +116,7 @@ public class LobbyManager : Photon.PunBehaviour {
         base.OnJoinedRoom();
 
         playerCustomProps["Avatar"] = modelChoose.modelIndex;
+        AudioManager._Instance.Stop();
         PhotonNetwork.player.SetCustomProperties(playerCustomProps);
         PhotonNetwork.LoadLevel("Stage");
     }

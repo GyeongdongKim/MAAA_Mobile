@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+  m_AmbientSkyColor: {r: 0.10882353, g: 0.10882353, b: 0.10882353, a: 1}
   m_AmbientEquatorColor: {r: 0.47794116, g: 0.47794116, b: 0.47794116, a: 1}
   m_AmbientGroundColor: {r: 0.47794116, g: 0.47794116, b: 0.47794116, a: 1}
   m_AmbientIntensity: 1.08
@@ -2505,7 +2505,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000038146973
+      value: -0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 22426080, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 2}
       propertyPath: m_AnchorMin.y
@@ -20141,7 +20141,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 0
+  m_Priority: 1
   m_LookAt: {fileID: 14534509}
   m_Follow: {fileID: 14534509}
   m_Lens:
@@ -22498,12 +22498,12 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.88628376, b: 0.6839622, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 60
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -29342,12 +29342,12 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.88628376, b: 0.6839622, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 60
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -31538,12 +31538,12 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.88628376, b: 0.6839622, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 60
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -45622,6 +45622,10 @@ MonoBehaviour:
   - {fileID: 630199358}
   bottomIcons: {fileID: 642691430}
   startButton: {fileID: 1968697579}
+  lightObjects:
+  - {fileID: 1350370090}
+  - {fileID: 975299750}
+  - {fileID: 1437482346}
   lobbyCam: {fileID: 2023022401}
   vCams:
   - {fileID: 831979714}
