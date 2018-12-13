@@ -22,6 +22,7 @@ public class LobbyManager : Photon.PunBehaviour {
     public Text errorText;
     public GameObject successPopup;
     public Text successText;
+    public GameObject fadeInPanel;
 
     public ModelChoose modelChoose;
     [Header("MoniterIconUI")]
@@ -48,6 +49,7 @@ public class LobbyManager : Photon.PunBehaviour {
         else {
             panelSplash.SetActive(false);
             userProfileManager.InitCoinAndName(false);
+            AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
         }
         //PhotonNetwork.automaticallySyncScene = true;
     }
@@ -114,7 +116,7 @@ public class LobbyManager : Photon.PunBehaviour {
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-
+        fadeInPanel.SetActive(true);
         playerCustomProps["Avatar"] = modelChoose.modelIndex;
         AudioManager._Instance.Stop();
         PhotonNetwork.player.SetCustomProperties(playerCustomProps);

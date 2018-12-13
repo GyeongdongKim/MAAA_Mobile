@@ -36,10 +36,10 @@ public class ReadyManager : Photon.PunBehaviour {
     }
     private void Update()
     {
-        if (playersCount == needPlayer&&t>0&&t<50)
+        if (playersCount == needPlayer&&t>0&&t<90)
         {
             t -= Time.deltaTime;
-            timeText.text = t.ToString();
+            timeText.text = string.Format("{0:00}",t);
         }
         if (t <= 0)
         {
@@ -50,6 +50,7 @@ public class ReadyManager : Photon.PunBehaviour {
             if (PhotonNetwork.isMasterClient)
                 GetComponent<PhotonView>().RPC("GameReady", PhotonTargets.All);
         }
+        
     }
 
     IEnumerator Init()
@@ -72,12 +73,23 @@ public class ReadyManager : Photon.PunBehaviour {
     {
         base.OnPhotonPlayerConnected(newPlayer);
         playersCount = PhotonNetwork.room.PlayerCount;
+        if (playersCount == needPlayer)
+        {
+            PhotonNetwork.room.IsOpen = false;
+        }
     }
 
     public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
     {
         base.OnPhotonPlayerDisconnected(otherPlayer);
         playersCount = PhotonNetwork.room.PlayerCount;
+        if(timeText.text.Length>0)
+        {
+            timeText.text = "";
+            t = 60;
+
+            PhotonNetwork.room.IsOpen = true;
+        }
     }
 
     [PunRPC]

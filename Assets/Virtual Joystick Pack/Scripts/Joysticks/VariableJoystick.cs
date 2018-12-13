@@ -25,6 +25,12 @@ public class VariableJoystick : Joystick
         else
             OnFloat();
 
+        if (CrossPlatformInputManager.AxisExists(horizontalAxisName))
+            CrossPlatformInputManager.UnRegisterVirtualAxis(horizontalAxisName);
+
+        if (CrossPlatformInputManager.AxisExists(verticalAxisName))
+            CrossPlatformInputManager.UnRegisterVirtualAxis(verticalAxisName);
+
         m_HorizontalVirtualAxis = new CrossPlatformInputManager.VirtualAxis(horizontalAxisName);
         CrossPlatformInputManager.RegisterVirtualAxis(m_HorizontalVirtualAxis);
 

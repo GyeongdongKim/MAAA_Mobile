@@ -8,6 +8,7 @@ public class ModelChoose : MonoBehaviour {
     public Transform[] models;
     public GameObject bottomIcons,startButton;
     public Light[] lightObjects;
+    public Light spotLight;
     public CinemachineVirtualCamera lobbyCam;
     public CinemachineVirtualCamera[] vCams;
     public GameObject buttonleft, buttonright,buttonreturn;
@@ -56,6 +57,7 @@ public class ModelChoose : MonoBehaviour {
         bottomIcons.transform.DOLocalMoveY(-670f, 1);
         startButton.transform.DOLocalMoveY(-460f, 1);
         LightControl(true);
+        spotLight.intensity = 0;
     }
 
     public void OnClickOut()
@@ -68,6 +70,7 @@ public class ModelChoose : MonoBehaviour {
         bottomIcons.transform.DOLocalMoveY(-415f, 1);
         startButton.transform.DOLocalMoveY(-620f, 1);
         LightControl(false);
+        spotLight.intensity = 1;
     }
 
     void LightControl(bool isTurn)
