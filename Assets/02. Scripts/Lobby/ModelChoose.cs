@@ -6,7 +6,7 @@ using DG.Tweening;
 public class ModelChoose : MonoBehaviour {
 
     public Transform[] models;
-    public GameObject bottomIcons,startButton;
+    public GameObject bottomIcons,startButton, textSelectModel,textNickname;
     public Light[] lightObjects;
     public Light spotLight;
     public CinemachineVirtualCamera lobbyCam;
@@ -55,7 +55,9 @@ public class ModelChoose : MonoBehaviour {
         buttonright.SetActive(true);
         buttonreturn.SetActive(true);
         bottomIcons.transform.DOLocalMoveY(-670f, 1);
+        textNickname.transform.DOLocalMoveY(670f, 1);
         startButton.transform.DOLocalMoveY(-460f, 1);
+        textSelectModel.transform.DOLocalMoveY(460f, 1);
         LightControl(true);
         spotLight.intensity = 0;
     }
@@ -68,7 +70,9 @@ public class ModelChoose : MonoBehaviour {
         buttonright.SetActive(false);
         buttonreturn.SetActive(false);
         bottomIcons.transform.DOLocalMoveY(-415f, 1);
+        textNickname.transform.DOLocalMoveY(480f, 1);
         startButton.transform.DOLocalMoveY(-620f, 1);
+        textSelectModel.transform.DOLocalMoveY(620f, 1);
         LightControl(false);
         spotLight.intensity = 1;
     }

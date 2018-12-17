@@ -13,16 +13,21 @@ public class PUNVoiceController : MonoBehaviour {
             yield return null;
         settings = FindObjectOfType<PhotonVoiceSettings>();
         rec = FindObjectOfType<PhotonVoiceRecorder>();
+
+        PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], null);
+        rec.AudioGroup = (byte)0;
 	}
 
     public void OnClickAll()
     {
         rec.Transmit = true;
+        PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], null);
         rec.AudioGroup = (byte)0;
     }
     public void OnClickMafia()
     {
         rec.Transmit = true;
+        PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], null);
         rec.AudioGroup = (byte)1;
     }
     public void OnClickOff()

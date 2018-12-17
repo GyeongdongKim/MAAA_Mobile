@@ -29,6 +29,8 @@ public class DayNightController : MonoBehaviour {
     public float timeMultiplier = 1f;
     private AudioSource audioSource;
 
+    public GameObject barricade;
+
     [Header("Sound Clip")]
     public AudioClip morningAudio;
     public AudioClip voteAudio;
@@ -59,8 +61,9 @@ public class DayNightController : MonoBehaviour {
                 dayChange = true;
                 gameManager.DayPrint();
                 AudioManager._Instance.Fade(morningAudio, 1f, true);// I.ChangeBGM(morningAudio, false);
-                
-                //GetComponent<GameOverManager>().CheckGame();
+                barricade.SetActive(true);
+                gameManager.localPlayer.GetComponent<Transform>().position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
+                GetComponent<GameOverManager>().CheckGame();
             }
             // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
             if (currentTimeOfDay >= 1)
@@ -82,6 +85,7 @@ public class DayNightController : MonoBehaviour {
 
             if (currentTimeOfDay > 13f / 18f && !nightTrigger)
             {
+                barricade.SetActive(false);
                 NarrationWhat("Ready for the night");
                 nightTrigger = true;
                 AudioManager._Instance.Fade(nightAudio, 1f, true);// I.ChangeBGM(nightAudio, true);

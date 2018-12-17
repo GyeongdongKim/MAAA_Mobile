@@ -23,6 +23,7 @@ public class ReadyManager : Photon.PunBehaviour {
     // Use this for initialization
     void Start () {
         timeText.GetComponent<Animator>().SetBool("FadeIn",true);
+        timeText.text = "Wait For 8 Players";
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
         localPlayer = PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         localCam = PhotonNetwork.Instantiate("Cameras", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
@@ -113,12 +114,23 @@ public class ReadyManager : Photon.PunBehaviour {
 
     public void OnClickExitRoom()
     {
-        AudioManager._Instance.Stop();
+        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1f, true);
         PhotonNetwork.LeaveRoom();
     }
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
         SceneManager.LoadScene("Lobby");
+    }
+    void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            stream.SendNext(timeText.text);
+        }
+        else
+        {
+            timeText.text = (string)stream.ReceiveNext();
+        }
     }
 }

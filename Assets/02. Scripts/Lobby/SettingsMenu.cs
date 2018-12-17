@@ -6,11 +6,6 @@ using UnityEngine.Audio;
 public class SettingsMenu : MonoBehaviour {
 
     public AudioMixer audioMixer;
-    public void SetVolume(float volume)
-    {
-        audioMixer.SetFloat("volume", volume);
-    }
-
     public void SetQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex);
@@ -18,6 +13,20 @@ public class SettingsMenu : MonoBehaviour {
     public void MicSetting()
     {
 
+    }
+    public void SetMasterVolume(float volume)
+    {
+        audioMixer.SetFloat("MasterVolume", volume);
+    }
+
+    public void SetBGMVolume(float volume)
+    {
+        audioMixer.SetFloat("BGMVolume", volume);
+    }
+
+    public void SetVoiceVolume(float volume)
+    {
+        audioMixer.SetFloat("VoiceVolume", volume);
     }
 
     public void ClickSettingButton()
