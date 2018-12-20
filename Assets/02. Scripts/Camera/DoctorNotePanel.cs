@@ -20,13 +20,13 @@ public class DoctorNotePanel : MonoBehaviour {
 
     public void OnClickPlayerName(Text playerName)
     {
-        FindObjectOfType<GameManager>().playerToSurvive=playerName.text;
+        FindObjectOfType<GameManager>().photonView.RPC("SelectPlayerToSurvive", PhotonTargets.All, playerName.text);
         noteRotate.NoteOff();
     }
 
     public void NoSelectPlayer()
     {
-        FindObjectOfType<GameManager>().playerToSurvive = PhotonNetwork.player.NickName;
+        FindObjectOfType<GameManager>().photonView.RPC("SelectPlayerToSurvive", PhotonTargets.All, PhotonNetwork.player.NickName);
     }
 
     public void InitNoteList()

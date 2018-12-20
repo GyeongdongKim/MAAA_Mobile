@@ -9,12 +9,14 @@ using UnityStandardAssets.Characters.ThirdPerson;
 using LetterboxCamera;
 
 public class ReadyManager : Photon.PunBehaviour {
+
     public Text timeText;
     public GameObject[] gameObjects;
     public float t;
     public int needPlayer;
     private int playersCount;
     public BigMoniterControler bmc;
+    private bool isGameStart = false;
     [HideInInspector] public GameObject localPlayer, localCam;
     [HideInInspector] public MouseHover doctorNoteHover, voteHover;
     public Canvas canvas;
@@ -44,11 +46,13 @@ public class ReadyManager : Photon.PunBehaviour {
                 t -= Time.deltaTime;
                 timeText.text = string.Format("{0:00}", t);
             }
-            else
+            else if (!isGameStart)
+            {
                 timeText.text = "Wait For 8 Players";
+            }
             if (string.Format("{0:00}", t) == "00")
             {
-                t = 100;
+                t = 1000;
                 timeText.text = "";
                 timeText.GetComponent<Animator>().SetBool("FadeIn", false);
 
@@ -56,23 +60,7 @@ public class ReadyManager : Photon.PunBehaviour {
             }
         }
     }
-
-    /*IEnumerator Init()
-    {
-        yield return new WaitForSeconds(1.0f);
-        Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
-        localPlayer = PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
-        localCam = PhotonNetwork.Instantiate("Cameras", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
-        freeLookCam = localCam.GetComponentInChildren<FreeLookCam>();
-        freeLookCam.m_Target = localPlayer.transform;
-        thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
-        canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
-        canvas.planeDistance = 0.1f;
-
-        //localPlayer.GetComponent<JobManager>().SetPlayerJob();
-        FindObjectOfType<ForceCameraRatio>().Start();
-    }*/
-
+    
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
         base.OnPhotonPlayerConnected(newPlayer);
@@ -89,7 +77,7 @@ public class ReadyManager : Photon.PunBehaviour {
         base.OnPhotonPlayerDisconnected(otherPlayer);
         playersCount = PhotonNetwork.room.PlayerCount;
         bmc.NoteUpdate();
-        if (timeText.text.Length>0)
+        if (timeText.text.Length>0&&!isGameStart)
         {
             timeText.text = "";
             t = 60;
@@ -106,6 +94,7 @@ public class ReadyManager : Photon.PunBehaviour {
             gameObjects[i].SetActive(true);
         }
 
+        isGameStart = true;
         localPlayer.GetComponent<JobManager>().enabled = true;
     }
 

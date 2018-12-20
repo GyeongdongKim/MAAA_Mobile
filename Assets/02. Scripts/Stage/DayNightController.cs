@@ -7,7 +7,7 @@ public class DayNightController : MonoBehaviour {
     // The directional light which we manipulate as our sun.
     public Light sun;
     public Text currentTime;
-    private bool dayChange = false, voteTrigger = false, nightTrigger = false;
+    private bool dayChange = false, voteTrigger = false, nightTrigger = false,spawnTrigger=false;
     //[HideInInspector]public GameObject[] pointlights;
     [HideInInspector] public bool gameOver=true;
     public Text narrative;
@@ -33,7 +33,7 @@ public class DayNightController : MonoBehaviour {
     private AudioSource audioSource;
 
     public GameObject barricade;
-
+    public GameObject executionCollider;
     [Header("Sound Clip")]
     public AudioClip morningAudio;
     public AudioClip voteAudio;
@@ -60,16 +60,20 @@ public class DayNightController : MonoBehaviour {
             currentTime.text = currentTimeOfDay.ToString();
             if (currentTimeOfDay > 0.25 && !dayChange)
             {
+                executionCollider.SetActive(false);
                 Debug.Log("dayPrint");
-                eventUIs[2].SetActive(false);
                 eventUIs[0].SetActive(true);
                 bmc.NoteUpdate();
                 dayChange = true;
                 gameManager.DayPrint();
                 AudioManager._Instance.Fade(morningAudio, 0.3f, true);// I.ChangeBGM(morningAudio, false);
                 barricade.SetActive(true);
-                FindObjectOfType<ReadyManager>().localPlayer.transform.position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
                 GetComponent<GameOverManager>().CheckGame();
+            }
+            if (currentTimeOfDay > 0.25f + 1f / 36f&&!spawnTrigger)
+            {
+                gameManager.localPlayer.transform.position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
+                spawnTrigger = true;
             }
             // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
             if (currentTimeOfDay >= 1)
@@ -79,10 +83,13 @@ public class DayNightController : MonoBehaviour {
                 GetComponent<VoteManager>().trigger1 = false;
                 GetComponent<VoteManager>().trigger2 = false;
                 voteTrigger = false;nightTrigger = false;
+                eventUIs[2].SetActive(false);
+                spawnTrigger = false;
             }
 
             if (currentTimeOfDay > 23f / 36f && !voteTrigger)
             {
+                executionCollider.SetActive(true);
                 NarrationWhat("The vote will begin soon");
                 eventUIs[0].SetActive(false);
                 eventUIs[1].SetActive(true);
@@ -93,6 +100,7 @@ public class DayNightController : MonoBehaviour {
 
             if (currentTimeOfDay > 13f / 18f && !nightTrigger)
             {
+                executionCollider.SetActive(false);
                 barricade.SetActive(false);
                 NarrationWhat("Ready for the night");
                 eventUIs[1].SetActive(false);

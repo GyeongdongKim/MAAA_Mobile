@@ -47,62 +47,6 @@ public class JobManager : Photon.PunBehaviour {
     }
     private void Update()
     {
-        /*if (!gameManager.isDead)
-        {
-            if (isMafia)
-            {
-                if (dayNightController.currentTimeOfDay < 0.24 || dayNightController.currentTimeOfDay > 0.75)
-                {
-                    if (!shooted && !isDeath)
-                    {
-                        Debug.Log("MAFIA KILL UI");
-                        gameManager.PrintKillUI(15.0f);
-                    }
-                    else
-                    {
-                        gameManager.killUI.SetActive(false);
-                    }
-                }
-            }
-            if (isDoctor)
-            {
-                if (0.75 < dayNightController.currentTimeOfDay && !isNotePop)
-                {
-                    Debug.Log("JOBMANAGER DOCTOR NOTE POP");
-                    FindObjectOfType<ReadyManager>().localCam.GetComponentInChildren<NoteRotate>().NoteTrigger();
-                    isNotePop = true;
-                }
-            }
-            if (gameManager.dayCount != tempDay && dayNightController.currentTimeOfDay > 0.24)
-            {
-                shooted = false;
-                tempDay = gameManager.dayCount;
-                isNotePop = false; isVotePop = false;
-                DayChangeInit();
-                PhotonNetwork.player.SetScore(0);
-            }
-            if (2f/3f < dayNightController.currentTimeOfDay && !isVotePop)
-            {
-                FindObjectOfType<ReadyManager>().localCam.GetComponentInChildren<VoteRotate>().VoteTrigger();
-                isVotePop = true;
-            }
-            if (0.75 < dayNightController.currentTimeOfDay && execution)
-            {
-                if (chanban >= PhotonNetwork.playerList.Length/2)
-                {
-                    PhotonNetwork.Destroy(GetComponent<PhotonView>());
-                    gameManager.DeathCam();
-                    playerCustomProps["Death"] = true;
-                    PhotonNetwork.player.SetCustomProperties(playerCustomProps);
-                }
-                else
-                {
-                    chanban = 0;
-                    GetComponent<ThirdPersonUserControl>().isStop=false;
-                }
-                execution = false;
-            }
-        }*/
     }
 
     public void AttackCoroutine(GameObject target)
@@ -131,7 +75,7 @@ public class JobManager : Photon.PunBehaviour {
 
     public void Fire(GameObject killTarget)
     {
-        gameManager.PlaySfx(firePoint.transform.position, 10.0f, 100f, fireSound);
+        //gameManager.PlaySfx(firePoint.transform.position, 10.0f, 100f, fireSound);
 
         killTarget.GetComponent<PhotonView>().RPC("Death", PhotonTargets.Others, killTarget.GetComponent<PhotonView>().viewID,killTarget.transform.position);
     }
@@ -195,31 +139,6 @@ public class JobManager : Photon.PunBehaviour {
         }        
     }*/
     #endregion
-    public void DayChangeInit()
-    {
-        if (!pv.isMine)
-            return;
-        if (!isDeath)
-        {
-            if (playerToKill == null)
-                return;
-            else if (playerToKill.owner.NickName == gameManager.playerToSurvive)
-            {
-                playerToKill.RPC("Survive", PhotonTargets.All, playerToKill.owner);
-                gameManager.playerToSurvive = null;
-            }
-        }
-        else
-        {
-            PhotonNetwork.Destroy(GetComponent<PhotonView>());
-            gameManager.DeathCam();
-            playerCustomProps["Death"] = true;
-            PhotonNetwork.player.SetCustomProperties(playerCustomProps);
-            Debug.Log("Day_Init Function DeathCam");
-        }
-
-    }
-
     public void PingMiniMap(Vector3 playerPos)
     {
         //gameManager.miniMap.GetComponent<MiniMapManager>().DisplayPing(playerPos);

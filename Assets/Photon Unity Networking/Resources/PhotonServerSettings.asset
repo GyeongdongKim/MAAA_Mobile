@@ -47,4 +47,5 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - Survive
+  - SelectPlayerToSurvive
   DisableAutoOpenWizard: 1

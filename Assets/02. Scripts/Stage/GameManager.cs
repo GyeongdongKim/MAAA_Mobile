@@ -34,7 +34,7 @@ public class GameManager : Photon.PunBehaviour {
     [SerializeField] private GameObject playerCamera;
     [HideInInspector] public FreeLookCam freeLookCam;
     [HideInInspector] public ThirdPersonUserControl thirdPersonUserControl;
-    [HideInInspector] public string playerToSurvive;
+    [HideInInspector] public bool playerToSurvive;
     [SerializeField] private AudioClip logoSound;
     //Hashtable roomType = new Hashtable();
     Hashtable playerCustomProps = new Hashtable();
@@ -64,6 +64,7 @@ public class GameManager : Photon.PunBehaviour {
     public GameObject mafiaMic;
     public GameObject panelMenu;
     public Text bmcDay;
+    public Text killPlayerName;
     #endregion
 
     #region Job Variables
@@ -110,8 +111,12 @@ public class GameManager : Photon.PunBehaviour {
                 {
                     if (!shooted)
                     {
-                        Debug.Log("MAFIA KILL UI");
                         PrintKillUI(15.0f);
+                    }
+                    else
+                    {
+                        killUI.SetActive(false);
+                        isKillUIOn = false;
                     }
                 }
             }
@@ -124,15 +129,6 @@ public class GameManager : Photon.PunBehaviour {
                     isNotePop = true;
                 }
             }
-            //if (dayCount != tempDay && dayNightController.currentTimeOfDay > 0.24)
-            //{
-            //    shooted = false;
-            //    tempDay = dayCount;
-            //    isNotePop = false; isVotePop = false;
-            //    //DayChangeInit();
-            //    PhotonNetwork.player.SetScore(0);
-            //    killUI.SetActive(false);
-            //}
             if (2f / 3f < dayNightController.currentTimeOfDay && !isVotePop)
             {
                 localCam.GetComponentInChildren<VoteRotate>().VoteTrigger();
@@ -158,30 +154,33 @@ public class GameManager : Photon.PunBehaviour {
 
     public void DayChangeInit()
     {
-        if (!isDead)
+        if (isDead)
         {
-            if (playerToKill == null)
-                return;
-            else if (playerToKill.owner.NickName == playerToSurvive)
+            if (playerToSurvive)
             {
-                playerToKill.RPC("Survive", PhotonTargets.All, playerToKill.owner);
-                playerToSurvive = null;
+                PhotonNetwork.Instantiate("surviveAnimation", localPlayer.transform.position, localPlayer.transform.rotation, 0);
+                isDead = false;
+                localPlayer.GetComponent<Animator>().SetBool("isDie", false);
+                GetComponent<ThirdPersonUserControl>().isStop = false;
+
+                playerToSurvive = false;
+            }
+            else
+            {
+                PhotonNetwork.Destroy(GetComponent<PhotonView>());
+                DeathCam();
+                playerCustomProps["Death"] = true;
+                PhotonNetwork.player.SetCustomProperties(playerCustomProps);
+                Debug.Log("Day_Init Function DeathCam");
             }
         }
-        else
-        {
-            PhotonNetwork.Destroy(GetComponent<PhotonView>());
-            DeathCam();
-            playerCustomProps["Death"] = true;
-            PhotonNetwork.player.SetCustomProperties(playerCustomProps);
-            Debug.Log("Day_Init Function DeathCam");
-        }
-
+        isNotePop = false;
+        isVotePop = false;
     }
 
     public void AttackCoroutine(GameObject target)
     {
-        if (!localPlayer.GetComponent<Animator>().GetBool("isAttack") && !shooted)
+        if (!localPlayer.GetComponent<Animator>().GetBool("isAttack"))
             StartCoroutine(Attack(target));
     }
 
@@ -190,26 +189,18 @@ public class GameManager : Photon.PunBehaviour {
         shooted = true;
         localPlayer.GetComponent<Animator>().SetBool("isAttack", true);
         yield return new WaitForSeconds(1f);
-        //Fire(target);
-
-        PhotonNetwork.Instantiate("GunSound", localPlayer.GetComponent<JobManager>().firePoint.transform.position, GetComponent<JobManager>().firePoint.transform.rotation, 0);
-        target.GetComponent<PhotonView>().RPC("Death", PhotonTargets.Others, target.GetComponent<PhotonView>().viewID, target.transform.position);
-
+        PhotonNetwork.Instantiate("GunSound", transform.position, transform.rotation, 0);
+        pv.RPC("Death", PhotonTargets.Others, target.GetComponent<PhotonView>().viewID, target.transform.position);
         yield return new WaitForSeconds(1f);
         localPlayer.GetComponent<Animator>().SetBool("isAttack", false);
-    }
-    public void Fire(GameObject killTarget)
-    {
-        //PlaySfx(firePoint.transform.position, 10.0f, 100f, fireSound);
-        //PhotonNetwork.Instantiate("GunSound", localPlayer.GetComponent<JobManager>().firePoint.transform.position, GetComponent<JobManager>().firePoint.transform.rotation, 0);
-        //killTarget.GetComponent<PhotonView>().RPC("Death", PhotonTargets.Others, killTarget.GetComponent<PhotonView>().viewID, killTarget.transform.position);
     }
 
     [PunRPC]
     public void Death(int pvID, Vector3 targetPos)
     {
         shooted = true;
-        PingMiniMap(targetPos);
+        if (localPlayerJob == "POLICE")
+            PingMiniMap(targetPos);
         playerToKill = PhotonView.Find(pvID);
         if (pv.owner == PhotonView.Find(pvID).owner)
         {
@@ -219,15 +210,12 @@ public class GameManager : Photon.PunBehaviour {
         }
     }
     [PunRPC]
-    public void Survive(PhotonPlayer player)
+    public void SelectPlayerToSurvive(string playerName)
     {
-        if (pv.owner == player)
-        {
-            PhotonNetwork.Instantiate("surviveAnimation", localPlayer.transform.position, localPlayer.transform.rotation,0);
-            isDead = false;
-            localPlayer.GetComponent<Animator>().SetBool("isDie", false);
-            GetComponent<ThirdPersonUserControl>().isStop = false;
-        }
+        if (pv.owner.NickName == playerName)
+            playerToSurvive = true;
+        else
+            playerToSurvive = false;
     }
     #endregion
     #region DayPrint
@@ -333,17 +321,17 @@ public class GameManager : Photon.PunBehaviour {
         Debug.Log(localPlayer.GetComponent<JobManager>().chanban);
     }
     
-    IEnumerator SetPlayerNote()
-    {
-        yield return new WaitForSeconds(2f);
-        for (int i = 0; i < jobImages.Count; i++)
-        {
-            if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
-                imageJob.sprite = jobImages[i].jobImage;
-        }
-        NoteUpdate();
-        StopCoroutine(SetPlayerNote());
-    }
+    //IEnumerator SetPlayerNote()
+    //{
+    //    yield return new WaitForSeconds(2f);
+    //    for (int i = 0; i < jobImages.Count; i++)
+    //    {
+    //        if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
+    //            imageJob.sprite = jobImages[i].jobImage;
+    //    }
+    //    NoteUpdate();
+    //    StopCoroutine(SetPlayerNote());
+    //}
 
     private void SetPlayerJob()
     {
@@ -394,7 +382,7 @@ public class GameManager : Photon.PunBehaviour {
             }
         }
         pv.RPC("GameStart", PhotonTargets.All);
-        localPlayer.GetComponent<JobManager>().SetPlayerJob();
+        //localPlayer.GetComponent<JobManager>().SetPlayerJob();
     }
 
     IEnumerator Logo()
@@ -408,15 +396,16 @@ public class GameManager : Photon.PunBehaviour {
 
     public void PrintKillUI(float length)
     {
-        Debug.Log("GAMEMANAGER MAFIA PRINTKILLUI");
+        if (GetObjectWithPoint(length) == null)
+            return;
+        GameObject tempPlayer = GetObjectWithPoint(length);
         if (!shooted)
         {
-            if (GetObjectWithPoint(length) == null)
-                return;
-            if(GetObjectWithPoint(length).tag=="Player"&&!GetObjectWithPoint(length).GetPhotonView().isMine)
+            if(tempPlayer.tag=="Player"&&!tempPlayer.GetPhotonView().isMine)
             {
                 isKillUIOn = true;
                 killUI.SetActive(true);
+                killPlayerName.text = tempPlayer.GetPhotonView().owner.NickName;
             }
             else
             {
@@ -432,23 +421,23 @@ public class GameManager : Photon.PunBehaviour {
         miniMap.GetComponent<MiniMapManager>().DisplayPing(pos);
     }
 
-    public void PlaySfx(Vector3 pos, float minDis,float maxDis,AudioClip sfx)
-    {
-        if (isSfxMute) return;
+    //public void PlaySfx(Vector3 pos, float minDis,float maxDis,AudioClip sfx)
+    //{
+    //    if (isSfxMute) return;
 
-        GameObject soundObj = new GameObject("Sfx");
-        soundObj.transform.position = pos;
+    //    GameObject soundObj = new GameObject("Sfx");
+    //    soundObj.transform.position = pos;
 
-        AudioSource _audioSource = soundObj.AddComponent<AudioSource>();
+    //    AudioSource _audioSource = soundObj.AddComponent<AudioSource>();
 
-        _audioSource.clip = sfx;
-        _audioSource.minDistance = minDis;
-        _audioSource.maxDistance = maxDis;
-        _audioSource.volume = sfxVolumn;
-        _audioSource.Play();
+    //    _audioSource.clip = sfx;
+    //    _audioSource.minDistance = minDis;
+    //    _audioSource.maxDistance = maxDis;
+    //    _audioSource.volume = sfxVolumn;
+    //    _audioSource.Play();
 
-        Destroy(soundObj, sfx.length);
-    }
+    //    Destroy(soundObj, sfx.length);
+    //}
 
     public GameObject GetObjectWithPoint(float length)
     {
