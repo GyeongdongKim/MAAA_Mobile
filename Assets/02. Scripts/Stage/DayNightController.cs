@@ -12,6 +12,9 @@ public class DayNightController : MonoBehaviour {
     [HideInInspector] public bool gameOver=true;
     public Text narrative;
     private GameManager gameManager;
+    public BigMoniterControler bmc;
+    public GameObject[] eventUIs;
+
 
     // The number of real-world seconds in one full game day.
     // Set this to 86400 for a 24-hour realtime day.
@@ -58,11 +61,14 @@ public class DayNightController : MonoBehaviour {
             if (currentTimeOfDay > 0.25 && !dayChange)
             {
                 Debug.Log("dayPrint");
+                eventUIs[2].SetActive(false);
+                eventUIs[0].SetActive(true);
+                bmc.NoteUpdate();
                 dayChange = true;
                 gameManager.DayPrint();
-                AudioManager._Instance.Fade(morningAudio, 1f, true);// I.ChangeBGM(morningAudio, false);
+                AudioManager._Instance.Fade(morningAudio, 0.3f, true);// I.ChangeBGM(morningAudio, false);
                 barricade.SetActive(true);
-                gameManager.localPlayer.GetComponent<Transform>().position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
+                FindObjectOfType<ReadyManager>().localPlayer.transform.position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
                 GetComponent<GameOverManager>().CheckGame();
             }
             // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
@@ -78,8 +84,10 @@ public class DayNightController : MonoBehaviour {
             if (currentTimeOfDay > 23f / 36f && !voteTrigger)
             {
                 NarrationWhat("The vote will begin soon");
+                eventUIs[0].SetActive(false);
+                eventUIs[1].SetActive(true);
                 voteTrigger = true;
-                AudioManager._Instance.Fade(voteAudio, 1f, true);// I.ChangeBGM(voteAudio, true);
+                AudioManager._Instance.Fade(voteAudio, 0.3f, true);// I.ChangeBGM(voteAudio, true);
             }
 
 
@@ -87,8 +95,10 @@ public class DayNightController : MonoBehaviour {
             {
                 barricade.SetActive(false);
                 NarrationWhat("Ready for the night");
+                eventUIs[1].SetActive(false);
+                eventUIs[2].SetActive(true);
                 nightTrigger = true;
-                AudioManager._Instance.Fade(nightAudio, 1f, true);// I.ChangeBGM(nightAudio, true);
+                AudioManager._Instance.Fade(nightAudio, 0.3f, true);// I.ChangeBGM(nightAudio, true);
             }
         }
     }

@@ -15,17 +15,18 @@ public class VoteManager : MonoBehaviour {
 
     void Start() {
         pv = GetComponent<PhotonView>();
-        if(PhotonNetwork.isMasterClient)
+
+        dayNightController = GetComponent<DayNightController>();
+    }
+    public void WhoIsVoted()
+    {
+        if (PhotonNetwork.isMasterClient)
         {
             for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
             {
                 votePlayers[i] = PhotonNetwork.playerList[i];
             }
         }
-        dayNightController = GetComponent<DayNightController>();
-    }
-    public void WhoIsVoted()
-    {
         for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
         {
             if (i == 0)
@@ -51,7 +52,6 @@ public class VoteManager : MonoBehaviour {
                 }
                 else
                 {
-                    //GetComponent<GameManager>().localPlayer.GetPhotonView().RPC("Execution", votedPlayer,votedPlayer.ID);
                     pv.RPC("Execution", votedPlayer);
                     Debug.Log(votedPlayer.NickName + " execution / getscore : " + votedPlayer.GetScore());
                 }                
@@ -74,9 +74,8 @@ public class VoteManager : MonoBehaviour {
     public void OnClickKillButton(GameObject button)
     {
         //GetComponent<GameManager>().localPlayer.GetPhotonView().RPC("Chanban", votedPlayer, votedPlayer.ID);
-        pv.RPC("Chanban", votedPlayer, votedPlayer.ID);
+        pv.RPC("Chanban", votedPlayer);
         button.SetActive(false);
-        button.GetComponent<MouseHover>().isUIHover = false;
     }
 
     [PunRPC]

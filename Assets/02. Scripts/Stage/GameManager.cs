@@ -10,7 +10,7 @@ using LetterboxCamera;
 
 public class GameManager : Photon.PunBehaviour {
     #region Private Variables
-    //private PhotonView pv;
+    private PhotonView pv;
     public NoteList noteList;
 
     [HideInInspector] public MouseHover doctorNoteHover, voteHover;
@@ -25,6 +25,9 @@ public class GameManager : Photon.PunBehaviour {
 
     [HideInInspector] public GameObject localPlayer, localCam;
     public List<JobImage> jobImages;
+
+    [HideInInspector]public string localPlayerJob;
+    private DayNightController dayNightController;
 
     public Text coinScoreText;
     [SerializeField] private GameObject player;
@@ -60,48 +63,37 @@ public class GameManager : Photon.PunBehaviour {
     [HideInInspector] public bool isKillUIOn;
     public GameObject mafiaMic;
     public GameObject panelMenu;
-    
+    public Text bmcDay;
     #endregion
 
-    void Awake()
-    {/*
-        StartCoroutine(Logo());
-        PhotonNetwork.isMessageQueueRunning = true;
-        //pv = GetComponent<PhotonView>();
-        easyTween = GetComponent<EasyTween>();
-        readyManager = FindObjectOfType<ReadyManager>();
-        if (PhotonNetwork.player.IsMasterClient)
-        {
-            SetPlayerJob();
-        }
-        //StartCoroutine(SetPlayerNote());
-        //SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
-        //StartCoroutine(Init());
-        localCam = readyManager.localCam;
-        localPlayer = readyManager.localPlayer;
-        thirdPersonUserControl = readyManager.thirdPersonUserControl;
-        freeLookCam = readyManager.freeLookCam;*/
-    }
+    #region Job Variables
+    private bool shooted;
+    private bool isNotePop, isVotePop;
+    [HideInInspector]public bool execution;
+    private int tempDay = 0;
+    [HideInInspector] public PhotonView playerToKill;
+    #endregion
 
     private void OnEnable()
     {
         StartCoroutine(Logo());
         PhotonNetwork.isMessageQueueRunning = true;
-        //pv = GetComponent<PhotonView>();
+        pv = GetComponent<PhotonView>();
         easyTween = GetComponent<EasyTween>();
         readyManager = FindObjectOfType<ReadyManager>();
-        if (PhotonNetwork.player.IsMasterClient)
-        {
-            SetPlayerJob();
-        }
-        //StartCoroutine(SetPlayerNote());
-        //SceneManager.LoadScene("DemoScene5", LoadSceneMode.Additive);
-        //StartCoroutine(Init());
+        dayNightController = GetComponent<DayNightController>();
+
         localCam = readyManager.localCam;
         localPlayer = readyManager.localPlayer;
         localPlayer.GetComponent<JobManager>().enabled = true;
         thirdPersonUserControl = readyManager.thirdPersonUserControl;
         freeLookCam = readyManager.freeLookCam;
+        
+
+        if (PhotonNetwork.player.IsMasterClient)
+        {
+            SetPlayerJob();
+        }
     }
 
     void Update()
@@ -110,11 +102,144 @@ public class GameManager : Photon.PunBehaviour {
         {
             panelMenu.SetActive(true);
         }
+        if (!isDead)
+        {
+            if (localPlayerJob=="MAFIA")
+            {
+                if (dayNightController.currentTimeOfDay < 0.24 || dayNightController.currentTimeOfDay > 0.75)
+                {
+                    if (!shooted)
+                    {
+                        Debug.Log("MAFIA KILL UI");
+                        PrintKillUI(15.0f);
+                    }
+                }
+            }
+            else if (localPlayerJob=="DOCTOR")
+            {
+                if (0.75 < dayNightController.currentTimeOfDay && !isNotePop)
+                {
+                    Debug.Log("JOBMANAGER DOCTOR NOTE POP");
+                    localCam.GetComponentInChildren<NoteRotate>().NoteTrigger();
+                    isNotePop = true;
+                }
+            }
+            //if (dayCount != tempDay && dayNightController.currentTimeOfDay > 0.24)
+            //{
+            //    shooted = false;
+            //    tempDay = dayCount;
+            //    isNotePop = false; isVotePop = false;
+            //    //DayChangeInit();
+            //    PhotonNetwork.player.SetScore(0);
+            //    killUI.SetActive(false);
+            //}
+            if (2f / 3f < dayNightController.currentTimeOfDay && !isVotePop)
+            {
+                localCam.GetComponentInChildren<VoteRotate>().VoteTrigger();
+                isVotePop = true;
+            }
+            if (0.75 < dayNightController.currentTimeOfDay && execution)
+            {
+                if (localPlayer.GetComponent<JobManager>().chanban >= PhotonNetwork.playerList.Length / 2)
+                {
+                    PhotonNetwork.Destroy(GetComponent<PhotonView>());
+                    DeathCam();
+                }
+                else
+                {
+                    localPlayer.GetComponent<JobManager>().chanban = 0;
+                    GetComponent<ThirdPersonUserControl>().isStop = false;
+                }
+                execution = false;
+            }
+        }
+    }
+    #region JobManagerMethod
+
+    public void DayChangeInit()
+    {
+        if (!isDead)
+        {
+            if (playerToKill == null)
+                return;
+            else if (playerToKill.owner.NickName == playerToSurvive)
+            {
+                playerToKill.RPC("Survive", PhotonTargets.All, playerToKill.owner);
+                playerToSurvive = null;
+            }
+        }
+        else
+        {
+            PhotonNetwork.Destroy(GetComponent<PhotonView>());
+            DeathCam();
+            playerCustomProps["Death"] = true;
+            PhotonNetwork.player.SetCustomProperties(playerCustomProps);
+            Debug.Log("Day_Init Function DeathCam");
+        }
+
     }
 
+    public void AttackCoroutine(GameObject target)
+    {
+        if (!localPlayer.GetComponent<Animator>().GetBool("isAttack") && !shooted)
+            StartCoroutine(Attack(target));
+    }
+
+    IEnumerator Attack(GameObject target)
+    {
+        shooted = true;
+        localPlayer.GetComponent<Animator>().SetBool("isAttack", true);
+        yield return new WaitForSeconds(1f);
+        //Fire(target);
+
+        PhotonNetwork.Instantiate("GunSound", localPlayer.GetComponent<JobManager>().firePoint.transform.position, GetComponent<JobManager>().firePoint.transform.rotation, 0);
+        target.GetComponent<PhotonView>().RPC("Death", PhotonTargets.Others, target.GetComponent<PhotonView>().viewID, target.transform.position);
+
+        yield return new WaitForSeconds(1f);
+        localPlayer.GetComponent<Animator>().SetBool("isAttack", false);
+    }
+    public void Fire(GameObject killTarget)
+    {
+        //PlaySfx(firePoint.transform.position, 10.0f, 100f, fireSound);
+        //PhotonNetwork.Instantiate("GunSound", localPlayer.GetComponent<JobManager>().firePoint.transform.position, GetComponent<JobManager>().firePoint.transform.rotation, 0);
+        //killTarget.GetComponent<PhotonView>().RPC("Death", PhotonTargets.Others, killTarget.GetComponent<PhotonView>().viewID, killTarget.transform.position);
+    }
+
+    [PunRPC]
+    public void Death(int pvID, Vector3 targetPos)
+    {
+        shooted = true;
+        PingMiniMap(targetPos);
+        playerToKill = PhotonView.Find(pvID);
+        if (pv.owner == PhotonView.Find(pvID).owner)
+        {
+            isDead = true;
+            localPlayer.GetComponent<Animator>().SetBool("isDie", true);
+            GetComponent<ThirdPersonUserControl>().isStop = true;
+        }
+    }
+    [PunRPC]
+    public void Survive(PhotonPlayer player)
+    {
+        if (pv.owner == player)
+        {
+            PhotonNetwork.Instantiate("surviveAnimation", localPlayer.transform.position, localPlayer.transform.rotation,0);
+            isDead = false;
+            localPlayer.GetComponent<Animator>().SetBool("isDie", false);
+            GetComponent<ThirdPersonUserControl>().isStop = false;
+        }
+    }
+    #endregion
     #region DayPrint
     public void DayPrint()
     {
+        DayChangeInit();
+        shooted = false;
+        tempDay = dayCount;
+        isNotePop = false; isVotePop = false;
+        PhotonNetwork.player.SetScore(0);
+        killUI.SetActive(false);
+
         StartCoroutine(DayPrinter());
     }
     IEnumerator DayPrinter()
@@ -130,6 +255,7 @@ public class GameManager : Photon.PunBehaviour {
             narrText.text = dayCount.ToString() + " DAY Good Morning :)";
             narrText.GetComponent<Animator>().SetBool("FadeIn", true);
         }
+        bmcDay.text = dayCount + " Day";
         yield return new WaitForSeconds(4.0f);
         narrText.GetComponent<Animator>().SetBool("FadeIn", false);
         //narrText.text = "";
@@ -139,13 +265,28 @@ public class GameManager : Photon.PunBehaviour {
 
     public void DeathCam()
     {
+        GetComponent<DayNightController>().NarrationWhat("You are Dead :(");
         localCam.GetComponent<cameraPV>().DeathCam();
         canvas.worldCamera = localCam.GetComponent<cameraPV>().deathCam;
         canvas.planeDistance = 0.1f;
+
+        PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], new byte[0]);
+
+        localPlayer.GetComponent<PhotonVoiceRecorder>().Transmit = false;
         isDead = true;
+        playerCustomProps["Death"] = true;
+        PhotonNetwork.player.SetCustomProperties(playerCustomProps);
         playerNote.SetActive(false); miniMap.SetActive(false); killUI.SetActive(false);
+        GetComponent<PhotonView>().RPC("NoteAndMoniterUpdate", PhotonTargets.All);
     }
-    //[PunRPC]
+
+    [PunRPC]
+    public void NoteAndMoniterUpdate()
+    {
+        NoteUpdate();
+        FindObjectOfType<BigMoniterControler>().NoteUpdate();
+    }
+
     public void NoteUpdate()
     {
         for (int i = 0; i < PhotonNetwork.room.PlayerCount; i++)
@@ -163,63 +304,35 @@ public class GameManager : Photon.PunBehaviour {
     [PunRPC]
     public void GameStart()
     {
+        localPlayerJob = PhotonNetwork.player.CustomProperties["Job"].ToString();
         for (int i = 0; i < jobImages.Count; i++)
         {
-            if (jobImages[i].tag == PhotonNetwork.player.CustomProperties["Job"].ToString())
+            if (jobImages[i].tag == localPlayerJob)
                 imageJob.sprite = jobImages[i].jobImage;
         }
-        
-        NoteUpdate();
-        //StartCoroutine(SetPlayerNote());
 
-        GetComponent<DayNightController>().gameOver = false;
-        //StartCoroutine(LoadScene());
+        if (localPlayerJob == "MAFIA")
+            mafiaMic.SetActive(true);
+
+        NoteUpdate();
+
+        dayNightController.gameOver = false;
     }
     [PunRPC]
     public void Execution()
     {
-        //if (photonView.owner.ID == id)
-        //{
-            Debug.Log("Execution");
-            localPlayer.GetComponent<ThirdPersonUserControl>().isStop = true;
-            localPlayer.GetComponent<Transform>().position = new Vector3(-59f, 10f, -50f); //execution location
-            localPlayer.GetComponent<Transform>().rotation = Quaternion.Euler(0, -90f, 0);
-            localPlayer.GetComponent<JobManager>().execution = true;
-        //}
+        Debug.Log("Execution");
+        localPlayer.GetComponent<Transform>().position = new Vector3(-59f, 6f, -50f);
+        localPlayer.GetComponent<Transform>().rotation = Quaternion.Euler(0, -90f, 0);
+        execution = true;
     }
     [PunRPC]
-    public void Chanban(int id)
+    public void Chanban()
     {
-        //if (photonView.owner.ID == id)
-        //{
-            localPlayer.GetComponent<JobManager>().chanban++;
-            Debug.Log(localPlayer.GetComponent<JobManager>().chanban);
-        //}
+        localPlayer.GetComponent<JobManager>().chanban++;
+        Debug.Log(localPlayer.GetComponent<JobManager>().chanban);
     }
-
-    IEnumerator LoadScene()
-    {
-        yield return new WaitForSeconds(1.0f);
-
-        GetComponent<DayNightController>().gameOver = false;
-        //StartCoroutine(Init());
-        StopCoroutine(LoadScene());
-    }
-    /*IEnumerator Init()
-    {
-        yield return new WaitForSeconds(1.0f);
-        Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
-        localPlayer = PhotonNetwork.Instantiate(player.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
-        localCam = PhotonNetwork.Instantiate(playerCamera.name, spawnPoint, Quaternion.Euler(0, 0, 0), 0);
-        freeLookCam = localCam.GetComponentInChildren<FreeLookCam>();
-        thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
-        canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
-        canvas.planeDistance = 0.1f;
-
-        localPlayer.GetComponent<JobManager>().SetPlayerJob();
-        FindObjectOfType<ForceCameraRatio>().Start();
-    }*/
-
+    
     IEnumerator SetPlayerNote()
     {
         yield return new WaitForSeconds(2f);
@@ -232,64 +345,55 @@ public class GameManager : Photon.PunBehaviour {
         StopCoroutine(SetPlayerNote());
     }
 
-    public void SetPlayerJob()
+    private void SetPlayerJob()
     {
         int temp = PhotonNetwork.room.PlayerCount;
         int mafia1=0, mafia2=0, doctor=0, police=0;
 
-        if (PhotonNetwork.isMasterClient || temp < 4)
+        if (temp < 4)
         {
             for (int i = 0; i < temp; i++)
             {
                 playerCustomProps["Job"] = "CITIZEN";
                 playerCustomProps["Death"] = false;
-                //playerCustomProps["Avatar"] = Random.Range(0, 10);
                 PhotonNetwork.playerList[i].SetCustomProperties(playerCustomProps);
             }
-            GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
-
-            if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
-                mafiaMic.SetActive(false);
-            return;
         }
-            
-        PhotonPlayer[] playerList = PhotonNetwork.playerList;
-
-        mafia1 = Random.Range(0, temp);
-        while (mafia1 == mafia2)
-            mafia2 = Random.Range(0, temp);
-        while (mafia1 == doctor || mafia2 == doctor)
-            doctor = Random.Range(0, temp);
-        while (mafia1 == police || mafia2 == police || doctor == police)
-            police = Random.Range(0, temp);
-
-        for (int i = 0; i < temp; i++)
+        else
         {
-            if (i == mafia1||i==mafia2)
+            PhotonPlayer[] playerList = PhotonNetwork.playerList;
+
+            mafia1 = Random.Range(0, temp);
+            while (mafia1 == mafia2)
+                mafia2 = Random.Range(0, temp);
+            while (mafia1 == doctor || mafia2 == doctor)
+                doctor = Random.Range(0, temp);
+            while (mafia1 == police || mafia2 == police || doctor == police)
+                police = Random.Range(0, temp);
+
+            for (int i = 0; i < temp; i++)
             {
-                playerCustomProps["Job"] = "MAFIA";
-                //playerCustomProps["Avatar"] = Random.Range(0, 10);
+                if (i == mafia1 || i == mafia2)
+                {
+                    playerCustomProps["Job"] = "MAFIA";
+                }
+                else if (i == doctor)
+                {
+                    playerCustomProps["Job"] = "DOCTOR";
+                }
+                else if (i == police)
+                {
+                    playerCustomProps["Job"] = "POLICE";
+                }
+                else
+                {
+                    playerCustomProps["Job"] = "CITIZEN";
+                }
+                playerCustomProps["Death"] = false;
+                playerList[i].SetCustomProperties(playerCustomProps);
             }
-            else if (i == doctor)
-            {
-                playerCustomProps["Job"] = "DOCTOR";
-                //playerCustomProps["Avatar"] = Random.Range(0, 10);
-            }
-            else if (i==police)
-            {
-                playerCustomProps["Job"] = "POLICE";
-                //playerCustomProps["Avatar"] = Random.Range(0, 10);
-            }else
-            {
-                playerCustomProps["Job"] = "CITIZEN";
-                //playerCustomProps["Avatar"] = Random.Range(0, 10);
-            }
-            playerCustomProps["Death"] = false;
-            playerList[i].SetCustomProperties(playerCustomProps);
         }
-        GetComponent<PhotonView>().RPC("GameStart", PhotonTargets.All);
-        if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
-            mafiaMic.SetActive(false);
+        pv.RPC("GameStart", PhotonTargets.All);
         localPlayer.GetComponent<JobManager>().SetPlayerJob();
     }
 
@@ -297,13 +401,15 @@ public class GameManager : Photon.PunBehaviour {
     {
         this.GetComponent<AudioSource>().PlayOneShot(logoSound, 0.9f);
         panelLogo.SetActive(true);
+        PhotonNetwork.room.IsOpen = false;
         yield return new WaitForSeconds(4.0f);
         panelLogo.SetActive(false);
     }
 
     public void PrintKillUI(float length)
     {
-        if (!localPlayer.GetComponent<JobManager>().shooted)
+        Debug.Log("GAMEMANAGER MAFIA PRINTKILLUI");
+        if (!shooted)
         {
             if (GetObjectWithPoint(length) == null)
                 return;
@@ -325,6 +431,7 @@ public class GameManager : Photon.PunBehaviour {
         miniMap.SetActive(true);
         miniMap.GetComponent<MiniMapManager>().DisplayPing(pos);
     }
+
     public void PlaySfx(Vector3 pos, float minDis,float maxDis,AudioClip sfx)
     {
         if (isSfxMute) return;
@@ -362,7 +469,7 @@ public class GameManager : Photon.PunBehaviour {
 
     public void ClickKillButton()
     {
-        CrossPlatformInputManager.SetButtonDown("Kill");
+        AttackCoroutine(GetObjectWithPoint(15.0f));
     }
     #region PhotonNetworkCallbackFunction
     
@@ -370,6 +477,5 @@ public class GameManager : Photon.PunBehaviour {
     {
         NoteUpdate();
     }
-
     #endregion
 }

@@ -14,6 +14,7 @@ public class ReadyManager : Photon.PunBehaviour {
     public float t;
     public int needPlayer;
     private int playersCount;
+    public BigMoniterControler bmc;
     [HideInInspector] public GameObject localPlayer, localCam;
     [HideInInspector] public MouseHover doctorNoteHover, voteHover;
     public Canvas canvas;
@@ -23,7 +24,6 @@ public class ReadyManager : Photon.PunBehaviour {
     // Use this for initialization
     void Start () {
         timeText.GetComponent<Animator>().SetBool("FadeIn",true);
-        timeText.text = "Wait For 8 Players";
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
         localPlayer = PhotonNetwork.Instantiate("Player", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
         localCam = PhotonNetwork.Instantiate("Cameras", spawnPoint, Quaternion.Euler(0, 0, 0), 0);
@@ -31,30 +31,33 @@ public class ReadyManager : Photon.PunBehaviour {
         thirdPersonUserControl = localPlayer.GetComponent<ThirdPersonUserControl>();
         canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
         canvas.planeDistance = 0.1f;
-
+        bmc.NoteUpdate();
         //localPlayer.GetComponent<JobManager>().SetPlayerJob();
         FindObjectOfType<ForceCameraRatio>().Start();
     }
     private void Update()
     {
-        if (playersCount == needPlayer&&t>0&&t<90)
+        if (PhotonNetwork.isMasterClient)
         {
-            t -= Time.deltaTime;
-            timeText.text = string.Format("{0:00}",t);
-        }
-        if (t <= 0)
-        {
-            t = 100;
-            timeText.text = "";
-            timeText.GetComponent<Animator>().SetBool("FadeIn", false);
+            if (playersCount == needPlayer && t > 0 && t < 90)
+            {
+                t -= Time.deltaTime;
+                timeText.text = string.Format("{0:00}", t);
+            }
+            else
+                timeText.text = "Wait For 8 Players";
+            if (string.Format("{0:00}", t) == "00")
+            {
+                t = 100;
+                timeText.text = "";
+                timeText.GetComponent<Animator>().SetBool("FadeIn", false);
 
-            if (PhotonNetwork.isMasterClient)
                 GetComponent<PhotonView>().RPC("GameReady", PhotonTargets.All);
+            }
         }
-        
     }
 
-    IEnumerator Init()
+    /*IEnumerator Init()
     {
         yield return new WaitForSeconds(1.0f);
         Vector3 spawnPoint = new Vector3(Random.Range(-60, -40), 10, Random.Range(-60, -40));
@@ -66,14 +69,15 @@ public class ReadyManager : Photon.PunBehaviour {
         canvas.worldCamera = localCam.GetComponent<cameraPV>().cam;
         canvas.planeDistance = 0.1f;
 
-        localPlayer.GetComponent<JobManager>().SetPlayerJob();
+        //localPlayer.GetComponent<JobManager>().SetPlayerJob();
         FindObjectOfType<ForceCameraRatio>().Start();
-    }
+    }*/
 
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
         base.OnPhotonPlayerConnected(newPlayer);
         playersCount = PhotonNetwork.room.PlayerCount;
+        bmc.NoteUpdate();
         if (playersCount == needPlayer)
         {
             PhotonNetwork.room.IsOpen = false;
@@ -84,7 +88,8 @@ public class ReadyManager : Photon.PunBehaviour {
     {
         base.OnPhotonPlayerDisconnected(otherPlayer);
         playersCount = PhotonNetwork.room.PlayerCount;
-        if(timeText.text.Length>0)
+        bmc.NoteUpdate();
+        if (timeText.text.Length>0)
         {
             timeText.text = "";
             t = 60;
@@ -99,8 +104,9 @@ public class ReadyManager : Photon.PunBehaviour {
         for (int i = 0; i < gameObjects.Length; i++)
         {
             gameObjects[i].SetActive(true);
-            localPlayer.GetComponent<JobManager>().enabled = true;
         }
+
+        localPlayer.GetComponent<JobManager>().enabled = true;
     }
 
     public void NoteHover(MouseHover mouseHover)
@@ -114,7 +120,7 @@ public class ReadyManager : Photon.PunBehaviour {
 
     public void OnClickExitRoom()
     {
-        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1f, true);
+        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 0.3f, true);
         PhotonNetwork.LeaveRoom();
     }
     public override void OnLeftRoom()

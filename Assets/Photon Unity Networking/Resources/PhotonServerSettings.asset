@@ -14,7 +14,7 @@ MonoBehaviour:
   AppID: 24bc21a9-7f06-47de-a47f-479836074a4f
   VoiceAppID: 24bc21a9-7f06-47de-a47f-479836074a4f
   ChatAppID: 
-  HostType: 4
+  HostType: 1
   PreferredRegion: 9
   EnabledRegions: -1
   Protocol: 0
@@ -35,9 +35,11 @@ MonoBehaviour:
   - DestroyRpc
   - Execution
   - GameOver
+  - GameReady
   - GameStart
   - InstantiateRpc
   - LoadBattleField
+  - NoteAndMoniterUpdate
   - PickupItemInit
   - PunPickup
   - PunPickupSimple
@@ -45,5 +47,4 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - Survive
-  - GameReady
   DisableAutoOpenWizard: 1

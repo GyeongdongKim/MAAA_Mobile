@@ -29,6 +29,8 @@ public class GameOverManager : MonoBehaviour {
 
     public void CheckGame()
     {
+        if (gameManager.dayCount == 1)
+            return;
         int mafia=0, noMafia=0;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
@@ -60,8 +62,8 @@ public class GameOverManager : MonoBehaviour {
         }
         if (mafiaWin)
         {
-            if((string)PhotonNetwork.player.CustomProperties["Job"] == "MAFIA")
-            {//Mafia Win
+            if(gameManager.localPlayerJob=="MAFIA")
+            {//Mafia win
                 winIcon.SetActive(true);
                 defeatIcon.SetActive(false);
                 win.text = "5";
@@ -76,7 +78,7 @@ public class GameOverManager : MonoBehaviour {
             }
         }else
         {
-            if ((string)PhotonNetwork.player.CustomProperties["Job"] != "MAFIA")
+            if (gameManager.localPlayerJob != "MAFIA")
             {//Citizen Win
                 winIcon.SetActive(true);
                 defeatIcon.SetActive(false);
@@ -101,9 +103,9 @@ public class GameOverManager : MonoBehaviour {
 
     private void CoinSet()
     {
-        //tempScore =System.Convert.ToInt32(steamManager.GetUserData("MafiaCoin"));
-        //finalScore += tempScore;
-        //steamManager.SetUserData("MafiaCoin", finalScore.ToString());
+        tempScore = System.Convert.ToInt32(AudioManager._Instance.GetUserData("MafiaCoin"));
+        finalScore += tempScore;
+        AudioManager._Instance.SetUserData("MafiaCoin", finalScore.ToString());
     }
 
 }

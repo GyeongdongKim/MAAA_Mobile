@@ -37,10 +37,9 @@ public class JobManager : Photon.PunBehaviour {
     }
     private void OnEnable()
     {
-
         pv = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
-        gameManager = GameObject.FindGameObjectWithTag("GAMEMANAGER").GetComponent<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
         dayNightController = gameManager.GetComponent<DayNightController>();
         noteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<NoteRotate>();
         voteRotate = GameObject.FindGameObjectWithTag("CAM").GetComponentInChildren<VoteRotate>();
@@ -48,7 +47,7 @@ public class JobManager : Photon.PunBehaviour {
     }
     private void Update()
     {
-        if (!gameManager.isDead)
+        /*if (!gameManager.isDead)
         {
             if (isMafia)
             {
@@ -56,12 +55,22 @@ public class JobManager : Photon.PunBehaviour {
                 {
                     if (!shooted && !isDeath)
                     {
+                        Debug.Log("MAFIA KILL UI");
                         gameManager.PrintKillUI(15.0f);
                     }
                     else
                     {
                         gameManager.killUI.SetActive(false);
                     }
+                }
+            }
+            if (isDoctor)
+            {
+                if (0.75 < dayNightController.currentTimeOfDay && !isNotePop)
+                {
+                    Debug.Log("JOBMANAGER DOCTOR NOTE POP");
+                    FindObjectOfType<ReadyManager>().localCam.GetComponentInChildren<NoteRotate>().NoteTrigger();
+                    isNotePop = true;
                 }
             }
             if (gameManager.dayCount != tempDay && dayNightController.currentTimeOfDay > 0.24)
@@ -72,17 +81,9 @@ public class JobManager : Photon.PunBehaviour {
                 DayChangeInit();
                 PhotonNetwork.player.SetScore(0);
             }
-            if (isDoctor)
-            {
-                if (0.75 < dayNightController.currentTimeOfDay && !isNotePop)
-                {
-                    noteRotate.NoteTrigger();
-                    isNotePop = true;
-                }
-            }
             if (2f/3f < dayNightController.currentTimeOfDay && !isVotePop)
             {
-                voteRotate.VoteTrigger();
+                FindObjectOfType<ReadyManager>().localCam.GetComponentInChildren<VoteRotate>().VoteTrigger();
                 isVotePop = true;
             }
             if (0.75 < dayNightController.currentTimeOfDay && execution)
@@ -101,7 +102,7 @@ public class JobManager : Photon.PunBehaviour {
                 }
                 execution = false;
             }
-        }
+        }*/
     }
 
     public void AttackCoroutine(GameObject target)
@@ -136,7 +137,7 @@ public class JobManager : Photon.PunBehaviour {
     }
 
     #region RPC
-    [PunRPC]
+    /*[PunRPC]
     public void Death(int pvID, Vector3 targetPos)
     {
         shooted = true;
@@ -148,7 +149,7 @@ public class JobManager : Photon.PunBehaviour {
             animator.SetBool("isDie", true);
             GetComponent<ThirdPersonUserControl>().isStop=true;
         }
-    }
+    }*/
 
     /*[PunRPC]
     public void Voted(string name)
@@ -161,7 +162,7 @@ public class JobManager : Photon.PunBehaviour {
         //}
     }*/
 
-    [PunRPC]
+    /*[PunRPC]
     public void Survive(PhotonPlayer player)
     {
         if (pv.owner == player)
@@ -171,7 +172,7 @@ public class JobManager : Photon.PunBehaviour {
             animator.SetBool("isDie", false);
             GetComponent<ThirdPersonUserControl>().isStop=false;
         }
-    }
+    }*/
     /*[PunRPC]
     public void Execution(int id)
     {

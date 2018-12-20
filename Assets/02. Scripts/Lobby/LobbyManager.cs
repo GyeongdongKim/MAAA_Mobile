@@ -45,11 +45,12 @@ public class LobbyManager : Photon.PunBehaviour {
             panelSplash.SetActive(true);
             GameServices.Init();
             StartCoroutine(NameSet());
+            StartCoroutine(PhotonVoiceSet());
         }
         else {
             panelSplash.SetActive(false);
             userProfileManager.InitCoinAndName(false);
-            AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
+            AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 0.3f, true);
         }
         //PhotonNetwork.automaticallySyncScene = true;
     }
@@ -58,7 +59,7 @@ public class LobbyManager : Photon.PunBehaviour {
         while (!GameServices.IsInitialized()||!PhotonNetwork.connected)
             yield return null;
         panelSplash.SetActive(false);
-        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 1, true);
+        AudioManager._Instance.Fade(AudioManager._Instance.lobbyMusic, 0.3f, true);
         userId = GameServices.LocalUser.userName;
         playerNameText.text = "M_" + userId;
         PhotonNetwork.player.NickName = "M_"+userId;
@@ -72,6 +73,16 @@ public class LobbyManager : Photon.PunBehaviour {
         userProfileManager.InitCoinAndName(true);
         StopCoroutine(ProfileLoad());
     }
+    IEnumerator PhotonVoiceSet()
+    {
+        while (FindObjectOfType<PhotonVoiceSettings>() == null)
+            yield return null;
+
+        FindObjectOfType<PhotonVoiceSettings>().AutoDisconnect = true;
+        FindObjectOfType<PhotonVoiceSettings>().VoiceDetection = true;
+        yield return null;
+    }
+
     void Start() {
         
     }
@@ -116,7 +127,6 @@ public class LobbyManager : Photon.PunBehaviour {
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        fadeInPanel.SetActive(true);
         playerCustomProps["Avatar"] = modelChoose.modelIndex;
         AudioManager._Instance.Stop();
         PhotonNetwork.player.SetCustomProperties(playerCustomProps);
@@ -168,11 +178,16 @@ public class LobbyManager : Photon.PunBehaviour {
     public void OnClickStartButton()
     {
         if (PhotonNetwork.lobby == randomLobbyType)
+        {
             PhotonNetwork.JoinRandomRoom();
+            fadeInPanel.SetActive(true);
+        }
+            
         else
         {
             PhotonNetwork.JoinLobby(randomLobbyType);
             PhotonNetwork.JoinRandomRoom();
+            fadeInPanel.SetActive(true);
         }
     }
 

@@ -52,7 +52,7 @@ public class UserProfileManager : MonoBehaviour
         else
         {
             displayName.text = PhotonNetwork.player.NickName;
-            mafiaCoin = GetUserData("MafiaCoin");
+            textMafiaCoin.text = GetUserData("MafiaCoin");
         }
     }
 
@@ -77,7 +77,7 @@ public class UserProfileManager : MonoBehaviour
         {
             Keys = null
         }, result => {
-            Debug.Log("Got user data:");
+            Debug.Log("getmafiacoin");
             if (result.Data.ContainsKey(key))
                 value = result.Data[key].Value;
             else

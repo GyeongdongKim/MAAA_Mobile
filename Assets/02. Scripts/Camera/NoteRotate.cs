@@ -39,6 +39,7 @@ public class NoteRotate : MonoBehaviour {
 
     public void NoteTrigger()
     {
+        Debug.Log("NOTETRIGGER");
         NoteOn();
         temp = 10;
         StartCoroutine(NoteStart());

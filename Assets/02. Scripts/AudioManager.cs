@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using PlayFab;
+using PlayFab.ClientModels;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager _Instance = null;
@@ -132,7 +133,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="loop">Whether to loop the new clip, or not.</param>
     public void Fade(AudioClip clip, float volume, bool loop)
     {
-        if (clip == null || clip == this.audioSource.clip)
+        if (clip == null)// || clip == this.audioSource.clip
         {
             return;
         }
@@ -250,5 +251,43 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region PlayFabAPI
+    public void SetUserData(string key, string data)
+    {
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest()
+        {
+            Data = new Dictionary<string, string>() {
+            {key, data}}
+        },
+        result => Debug.Log("Successfully updated user data"),
+        error => {
+            Debug.Log("Got error setting user data Ancestor to Arthur");
+            Debug.Log(error.GenerateErrorReport());
+        });
+    }
+
+    public string GetUserData(string key)
+    {
+        string value = null;
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest()
+        {
+            Keys = null
+        }, result => {
+            Debug.Log("getmafiacoin");
+            if (result.Data.ContainsKey(key))
+                value = result.Data[key].Value;
+            else
+                Debug.Log("No key : " + key);
+            //if (result.Data == null || !result.Data.ContainsKey("Ancestor")) Debug.Log("No Ancestor");
+            //else Debug.Log("Ancestor: " + result.Data["Ancestor"].Value);
+        }, (error) => {
+            Debug.Log("Got error retrieving user data:");
+            Debug.Log(error.GenerateErrorReport());
+            value = null;
+        });
+        return value;
+    }
     #endregion
 }

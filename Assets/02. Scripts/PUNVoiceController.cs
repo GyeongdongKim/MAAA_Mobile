@@ -9,10 +9,10 @@ public class PUNVoiceController : MonoBehaviour {
 
 	// Use this for initialization
 	IEnumerator Start () {
-        while (FindObjectOfType<PhotonVoiceRecorder>() == null)
+        while (FindObjectOfType<ReadyManager>().localPlayer == null)
             yield return null;
         settings = FindObjectOfType<PhotonVoiceSettings>();
-        rec = FindObjectOfType<PhotonVoiceRecorder>();
+        rec = FindObjectOfType<ReadyManager>().localPlayer.GetComponent<PhotonVoiceRecorder>();
 
         PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], null);
         rec.AudioGroup = (byte)0;
