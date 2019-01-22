@@ -48,7 +48,7 @@ public class ReadyManager : Photon.PunBehaviour {
             }
             else if (!isGameStart)
             {
-                timeText.text = "Wait For 8 Players";
+                timeText.text = "Wait For 5 Players";
             }
             if (string.Format("{0:00}", t) == "00")
             {
