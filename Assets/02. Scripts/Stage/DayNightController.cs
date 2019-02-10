@@ -97,7 +97,6 @@ public class DayNightController : MonoBehaviour {
                 AudioManager._Instance.Fade(voteAudio, 0.3f, true);// I.ChangeBGM(voteAudio, true);
             }
 
-
             if (currentTimeOfDay > 13f / 18f && !nightTrigger)
             {
                 executionCollider.SetActive(false);
@@ -106,6 +105,7 @@ public class DayNightController : MonoBehaviour {
                 eventUIs[1].SetActive(false);
                 eventUIs[2].SetActive(true);
                 nightTrigger = true;
+                GetComponent<GameOverManager>().CheckGame();
                 AudioManager._Instance.Fade(nightAudio, 0.3f, true);// I.ChangeBGM(nightAudio, true);
             }
         }

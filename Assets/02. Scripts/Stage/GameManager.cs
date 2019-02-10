@@ -138,7 +138,7 @@ public class GameManager : Photon.PunBehaviour {
             {
                 if (localPlayer.GetComponent<JobManager>().chanban >= PhotonNetwork.playerList.Length / 2)
                 {
-                    PhotonNetwork.Destroy(GetComponent<PhotonView>());
+                    PhotonNetwork.Destroy(localPlayer.GetComponent<PhotonView>());
                     DeathCam();
                 }
                 else
@@ -167,7 +167,7 @@ public class GameManager : Photon.PunBehaviour {
             }
             else
             {
-                PhotonNetwork.Destroy(GetComponent<PhotonView>());
+                PhotonNetwork.Destroy(localPlayer.GetComponent<PhotonView>());
                 DeathCam();
                 playerCustomProps["Death"] = true;
                 PhotonNetwork.player.SetCustomProperties(playerCustomProps);
