@@ -25,6 +25,8 @@ public class VotePaperPanel : MonoBehaviour {
     {
         for (int i = 0; i < PhotonNetwork.room.PlayerCount; i++)
         {
+            if ((bool)PhotonNetwork.playerList[i].CustomProperties["Death"])
+                return;
             buttons[i].GetComponentInChildren<Text>().text = PhotonNetwork.playerList[i].NickName;
             buttons[i].GetComponent<PlayerIDinButton>().id = PhotonNetwork.playerList[i].ID;
         }

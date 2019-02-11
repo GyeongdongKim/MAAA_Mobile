@@ -157,7 +157,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.gdgames.maaa
   buildNumber: {}
-  AndroidBundleVersionCode: 13
+  AndroidBundleVersionCode: 20
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

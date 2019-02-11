@@ -10,7 +10,7 @@ public class KillButtonController : MonoBehaviour {
     }
     IEnumerator disable()
     {
-        yield return new WaitForSeconds(20.0f);
+        yield return new WaitForSeconds(10.0f);
         this.gameObject.SetActive(false);
         StopCoroutine(disable());
     }

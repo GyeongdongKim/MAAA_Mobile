@@ -23,8 +23,6 @@ public class MiniMapManager : MonoBehaviour {
 
     public void DisplayPing(Vector3 playerPosition)
     {
-        if (PhotonNetwork.player.CustomProperties["Job"].ToString() != "POLICE")
-            return;
         float temp_w, temp_h;
         temp_w = ratio_w * (width.x - playerPosition.x);
         temp_h = ratio_h * (height.z - playerPosition.z);

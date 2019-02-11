@@ -10,7 +10,7 @@ using LetterboxCamera;
 
 public class GameManager : Photon.PunBehaviour {
     #region Private Variables
-    private PhotonView pv;
+    [HideInInspector]public PhotonView pv;
     public NoteList noteList;
 
     [HideInInspector] public MouseHover doctorNoteHover, voteHover;
@@ -54,7 +54,7 @@ public class GameManager : Photon.PunBehaviour {
     [Header("UI Variables")]
     public Canvas canvas;
     public Text narrText;
-    public Text txtLogMsg;
+    //public Text txtLogMsg;
     [SerializeField] private Image imageJob;
     [SerializeField] private GameObject playerNote;
     [SerializeField] private GameObject panelLogo;
@@ -72,7 +72,6 @@ public class GameManager : Photon.PunBehaviour {
     private bool isNotePop, isVotePop;
     [HideInInspector]public bool execution;
     private int tempDay = 0;
-    [HideInInspector] public PhotonView playerToKill;
     #endregion
 
     private void OnEnable()
@@ -138,7 +137,7 @@ public class GameManager : Photon.PunBehaviour {
             {
                 if (localPlayer.GetComponent<JobManager>().chanban >= PhotonNetwork.playerList.Length / 2)
                 {
-                    PhotonNetwork.Destroy(localPlayer.GetComponent<PhotonView>());
+                    PhotonNetwork.Destroy(localPlayer);
                     DeathCam();
                 }
                 else
@@ -158,16 +157,16 @@ public class GameManager : Photon.PunBehaviour {
         {
             if (playerToSurvive)
             {
-                PhotonNetwork.Instantiate("surviveAnimation", localPlayer.transform.position, localPlayer.transform.rotation, 0);
+                PhotonNetwork.Instantiate("SurviveAnimation", localPlayer.transform.position, localPlayer.transform.rotation, 0);
                 isDead = false;
                 localPlayer.GetComponent<Animator>().SetBool("isDie", false);
-                GetComponent<ThirdPersonUserControl>().isStop = false;
+                thirdPersonUserControl.isStop = false;
 
                 playerToSurvive = false;
             }
             else
             {
-                PhotonNetwork.Destroy(localPlayer.GetComponent<PhotonView>());
+                PhotonNetwork.Destroy(localPlayer);
                 DeathCam();
                 playerCustomProps["Death"] = true;
                 PhotonNetwork.player.SetCustomProperties(playerCustomProps);
@@ -189,7 +188,7 @@ public class GameManager : Photon.PunBehaviour {
         shooted = true;
         localPlayer.GetComponent<Animator>().SetBool("isAttack", true);
         yield return new WaitForSeconds(1f);
-        PhotonNetwork.Instantiate("GunSound", transform.position, transform.rotation, 0);
+        PhotonNetwork.Instantiate("GunSound", localPlayer.transform.position, localPlayer.transform.rotation, 0);
         pv.RPC("Death", PhotonTargets.Others, target.GetComponent<PhotonView>().viewID, target.transform.position);
         yield return new WaitForSeconds(1f);
         localPlayer.GetComponent<Animator>().SetBool("isAttack", false);
@@ -201,18 +200,17 @@ public class GameManager : Photon.PunBehaviour {
         shooted = true;
         if (localPlayerJob == "POLICE")
             PingMiniMap(targetPos);
-        playerToKill = PhotonView.Find(pvID);
-        if (pv.owner == PhotonView.Find(pvID).owner)
+        if (localPlayer.GetPhotonView() == PhotonView.Find(pvID))
         {
             isDead = true;
             localPlayer.GetComponent<Animator>().SetBool("isDie", true);
-            GetComponent<ThirdPersonUserControl>().isStop = true;
+            thirdPersonUserControl.isStop = true;
         }
     }
     [PunRPC]
     public void SelectPlayerToSurvive(string playerName)
     {
-        if (pv.owner.NickName == playerName)
+        if (PhotonNetwork.player.NickName == playerName)
             playerToSurvive = true;
         else
             playerToSurvive = false;
@@ -227,8 +225,8 @@ public class GameManager : Photon.PunBehaviour {
         isNotePop = false; isVotePop = false;
         PhotonNetwork.player.SetScore(0);
         killUI.SetActive(false);
-
-        StartCoroutine(DayPrinter());
+        if(!isDead)
+            StartCoroutine(DayPrinter());
     }
     IEnumerator DayPrinter()
     {
@@ -254,8 +252,8 @@ public class GameManager : Photon.PunBehaviour {
     public void DeathCam()
     {
         GetComponent<DayNightController>().NarrationWhat("You are Dead :(");
-        localCam.GetComponent<cameraPV>().DeathCam();
         canvas.worldCamera = localCam.GetComponent<cameraPV>().deathCam;
+        localCam.GetComponent<cameraPV>().DeathCam();
         canvas.planeDistance = 0.1f;
 
         PhotonVoiceNetwork.Client.ChangeAudioGroups(new byte[0], new byte[0]);
@@ -318,7 +316,6 @@ public class GameManager : Photon.PunBehaviour {
     public void Chanban()
     {
         localPlayer.GetComponent<JobManager>().chanban++;
-        Debug.Log(localPlayer.GetComponent<JobManager>().chanban);
     }
     
     //IEnumerator SetPlayerNote()

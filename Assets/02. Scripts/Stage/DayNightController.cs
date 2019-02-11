@@ -67,13 +67,14 @@ public class DayNightController : MonoBehaviour {
                 dayChange = true;
                 gameManager.DayPrint();
                 AudioManager._Instance.Fade(morningAudio, 0.3f, true);// I.ChangeBGM(morningAudio, false);
-                barricade.SetActive(true);
-                GetComponent<GameOverManager>().CheckGame();
+                //barricade.SetActive(true);
             }
             if (currentTimeOfDay > 0.25f + 1f / 36f&&!spawnTrigger)
             {
-                gameManager.localPlayer.transform.position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
+                if (gameManager.localPlayer != null)
+                    gameManager.localPlayer.transform.position = new Vector3(Random.Range(-70, -55), 10, Random.Range(-60, -40)); //execution location
                 spawnTrigger = true;
+                GetComponent<GameOverManager>().CheckGame();
             }
             // If currentTimeOfDay is 1 (midnight) set it to 0 again so we start a new day.
             if (currentTimeOfDay >= 1)

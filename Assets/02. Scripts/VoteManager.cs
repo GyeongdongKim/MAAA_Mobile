@@ -54,7 +54,7 @@ public class VoteManager : MonoBehaviour {
                 {
                     pv.RPC("Execution", votedPlayer);
                     Debug.Log(votedPlayer.NickName + " execution / getscore : " + votedPlayer.GetScore());
-                }                
+                }
             }
             trigger1 = true;
         }
@@ -84,6 +84,13 @@ public class VoteManager : MonoBehaviour {
         killButton.SetActive(true);
         votedPlayer = PhotonPlayer.Find(player);
         Debug.Log(votedPlayer.NickName +" is Execution Voted");
+        if (PhotonNetwork.isMasterClient)
+        {
+            for (int i = 0; i < votePlayers.Length; i++)
+            {
+                votePlayers[i].SetScore(0);
+            }
+        }
     }
     
 }

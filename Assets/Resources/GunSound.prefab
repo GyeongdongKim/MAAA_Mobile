@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4713124589720546}
   - component: {fileID: 82061279338036604}
   - component: {fileID: 114337105677375228}
+  - component: {fileID: 114010635151947226}
   m_Layer: 0
   m_Name: GunSound
   m_TagString: Untagged
@@ -49,7 +50,8 @@ AudioSource:
   m_GameObject: {fileID: 1599791823567374}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: b5d0e7af19f7689428cc0b7dcf634269,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 726df1fa114b64773ad65856d81b7c12, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -136,6 +138,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114010635151947226
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1599791823567374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!114 &114337105677375228
 MonoBehaviour:
   m_ObjectHideFlags: 1
